@@ -1,15 +1,10 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-public class ProductService {
-    public ProductResponseDTO getProductById(Integer id) {
-        String getProductByIdUrl = "https://fakestoreapi.com/products/" + id;
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ProductResponseDTO> product = restTemplate.getForEntity(getProductByIdUrl, ProductResponseDTO.class);
+import java.util.List;
 
-        return product.getBody();
-    }
+public interface ProductService {
+    List<ProductResponseDTO> getAllProducts();
+    ProductResponseDTO getProductById(Integer id);
 }

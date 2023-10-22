@@ -1,13 +1,11 @@
 package com.scaler.ECommerceProductService.controller;
 
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
-import com.scaler.ECommerceProductService.service.ProductService;
+import com.scaler.ECommerceProductService.service.ProductServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +37,8 @@ public class ProductController {
 
     @GetMapping("/products/")
     public ResponseEntity getProductById(@RequestParam Integer id) {
-        ProductService productService = new ProductService();
-        ProductResponseDTO product = productService.getProductById(id);
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+        ProductResponseDTO product = productServiceImpl.getProductById(id);
 
         return ResponseEntity.ok(product);
     }
