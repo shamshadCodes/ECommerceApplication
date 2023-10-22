@@ -1,6 +1,7 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
