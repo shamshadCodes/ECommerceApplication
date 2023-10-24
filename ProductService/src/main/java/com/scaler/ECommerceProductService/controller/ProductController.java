@@ -40,7 +40,7 @@ public class ProductController {
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity deleteProduct(@PathVariable Integer id) {
-        ProductResponseDTO productResponse = productService.deleteProduct(id);
+        boolean productResponse = productService.deleteProduct(id);
         return ResponseEntity.ok(productResponse);
     }
 

@@ -1,6 +1,5 @@
 package com.scaler.ECommerceProductService.service;
 
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +43,10 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO deleteProduct(Integer id) {
+    public boolean deleteProduct(Integer id) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         String getProductByIdUrl = "https://fakestoreapi.com/products/" + id;
         restTemplate.delete(getProductByIdUrl);
-        return null;
+        return true;
     }
 }

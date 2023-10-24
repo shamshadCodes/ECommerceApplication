@@ -1,16 +1,10 @@
 package com.scaler.ECommerceProductService.service;
 
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
-
-import static java.util.Collections.addAll;
 
 @Service("ProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
@@ -32,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO deleteProduct(Integer id) {
+    public boolean deleteProduct(Integer id) {
         return null;
     }
 }
