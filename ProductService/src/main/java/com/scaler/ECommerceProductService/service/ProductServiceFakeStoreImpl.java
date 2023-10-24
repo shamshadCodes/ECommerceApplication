@@ -1,5 +1,6 @@
 package com.scaler.ECommerceProductService.service;
 
+import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO addProduct(ProductResponseDTO product) {
+    public ProductResponseDTO addProduct(ProductRequestDTO product) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         String getProductByIdUrl = "https://fakestoreapi.com/products/";
         ResponseEntity<ProductResponseDTO> productResponse = restTemplate.postForEntity(getProductByIdUrl, product, ProductResponseDTO.class);

@@ -1,6 +1,7 @@
 package com.scaler.ECommerceProductService.controller;
 
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
+import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import com.scaler.ECommerceProductService.service.ProductService;
 
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity addProduct(@RequestBody ProductResponseDTO product) {
+    public ResponseEntity addProduct(@RequestBody ProductRequestDTO product) {
         ProductResponseDTO productResponse = productService.addProduct(product);
         return ResponseEntity.ok(productResponse);
     }
