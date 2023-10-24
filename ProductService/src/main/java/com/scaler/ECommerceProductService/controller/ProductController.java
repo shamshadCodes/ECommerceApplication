@@ -1,14 +1,13 @@
 package com.scaler.ECommerceProductService.controller;
 
+import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import com.scaler.ECommerceProductService.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,11 +26,22 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/products/")
-    public ResponseEntity getProductById(@RequestParam Integer id) {
+    @GetMapping("/products/{id}")
+    public ResponseEntity getProductById(@PathVariable Integer id) {
         ProductResponseDTO product = productService.getProductById(id);
-
         return ResponseEntity.ok(product);
+    }
+
+    @PostMapping("/products")
+    public ResponseEntity addProduct(@RequestBody ProductResponseDTO product) {
+        ProductResponseDTO productResponse = productService.addProduct(product);
+        return ResponseEntity.ok(productResponse);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Integer id) {
+        ProductResponseDTO productResponse = productService.deleteProduct(id);
+        return ResponseEntity.ok(productResponse);
     }
 
 }
