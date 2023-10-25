@@ -15,10 +15,7 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    ProductResponseDTO product2 = new ProductResponseDTO();
-
     private ProductService productService;
-
 
     @Autowired
     public ProductController(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
@@ -49,5 +46,10 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
+    @PatchMapping("/products/{id}")
+    public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
+        ProductResponseDTO productResponse = productService.updateProduct(id, product);
+        return ResponseEntity.ok(productResponse);
+    }
 }
 

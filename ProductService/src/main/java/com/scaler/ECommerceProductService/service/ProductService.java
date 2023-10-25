@@ -14,4 +14,6 @@ public interface ProductService {
     ProductResponseDTO addProduct(ProductRequestDTO product);
 
     boolean deleteProduct(Integer id);
+
+    ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product);
 }
