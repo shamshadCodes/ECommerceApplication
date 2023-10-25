@@ -17,15 +17,8 @@ public class ProductController {
 
     ProductResponseDTO product2 = new ProductResponseDTO();
 
-//    @Autowired
-//    @Qualifier("ProductServiceFakeStoreImpl")
     private ProductService productService;
 
-    //Setter injection
-    /*@Autowired
-    public void setProductService(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
-        this.productService = productService;
-    }*/
 
     @Autowired
     public ProductController(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
