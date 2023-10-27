@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class ProductController {
 
@@ -42,8 +40,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity deleteProduct(@PathVariable Integer id) {
-        boolean productResponse = productService.deleteProduct(id);
+    public ResponseEntity deleteProduct(@PathVariable Integer id) throws ProductNotFoundException {
+        ProductResponseDTO productResponse = productService.deleteProduct(id);
         return ResponseEntity.ok(productResponse);
     }
 

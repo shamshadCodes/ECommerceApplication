@@ -5,8 +5,6 @@ import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 
-import java.util.List;
-
 public interface ProductService {
     ProductListResponseDTO getAllProducts();
 
@@ -14,7 +12,7 @@ public interface ProductService {
 
     ProductResponseDTO addProduct(ProductRequestDTO product);
 
-    boolean deleteProduct(Integer id);
+    ProductResponseDTO deleteProduct(Integer id) throws ProductNotFoundException;
 
     ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product);
 }

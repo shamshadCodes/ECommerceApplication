@@ -25,8 +25,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Integer id) {
-        return true;
+    public ProductResponseDTO deleteProduct(Integer id) {
+        return null;
     }
 
     @Override

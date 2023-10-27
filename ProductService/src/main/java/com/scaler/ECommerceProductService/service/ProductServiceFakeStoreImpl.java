@@ -1,20 +1,17 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
-import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
-import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
-import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.scaler.ECommerceProductService.mapper.ProductMapper.fakeStoreProductResponseToProductResponse;
+import static com.scaler.ECommerceProductService.mapper.ProductMapper.productRequestToFakeStoreProductRequest;
 import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 
 @Service("ProductServiceFakeStoreImpl")
@@ -29,9 +26,9 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public ProductListResponseDTO getAllProducts() {
-        List<FakeStoreProductResponseDTO> products = fakeStoreAPIClient.getAllProducts();
+        List<FakeStoreProductResponseDTO> fakeStoreProductList = fakeStoreAPIClient.getAllProducts();
         ProductListResponseDTO productListResponseDTO = new ProductListResponseDTO();
-        for(FakeStoreProductResponseDTO fakeStoreProduct: products){
+        for(FakeStoreProductResponseDTO fakeStoreProduct: fakeStoreProductList){
             productListResponseDTO.getProductList().add(fakeStoreProductResponseToProductResponse(fakeStoreProduct));
         }
         return productListResponseDTO;
@@ -39,27 +36,28 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public ProductResponseDTO getProductById(Integer id) throws ProductNotFoundException {
-        FakeStoreProductResponseDTO product = fakeStoreAPIClient.getProductById(id);
-        if(isNull(product)){
+        FakeStoreProductResponseDTO fakeStoreProductResponseDTO = fakeStoreAPIClient.getProductById(id);
+        if(isNull(fakeStoreProductResponseDTO)){
             throw new ProductNotFoundException("Product not found with id: " + id);
         }
-        return fakeStoreProductResponseToProductResponse(product);
+        return fakeStoreProductResponseToProductResponse(fakeStoreProductResponseDTO);
     }
 
     @Override
-    public ProductResponseDTO addProduct(ProductRequestDTO product) {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        String getProductByIdUrl = "https://fakestoreapi.com/products/";
-        ResponseEntity<ProductResponseDTO> productResponse = restTemplate.postForEntity(getProductByIdUrl, product, ProductResponseDTO.class);
-        return productResponse.getBody();
+    public ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO) {
+        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(productRequestDTO);
+        FakeStoreProductResponseDTO fakeStoreProductResponseDTO = fakeStoreAPIClient.createProduct(fakeStoreProductRequestDTO);
+
+        return fakeStoreProductResponseToProductResponse(fakeStoreProductResponseDTO);
     }
 
     @Override
-    public boolean deleteProduct(Integer id) {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        String getProductByIdUrl = "https://fakestoreapi.com/products/" + id;
-        restTemplate.delete(getProductByIdUrl);
-        return true;
+    public ProductResponseDTO deleteProduct(Integer id) throws ProductNotFoundException {
+        FakeStoreProductResponseDTO fakeStoreProductResponseDTO = fakeStoreAPIClient.deleteProduct(id);
+        if(isNull(fakeStoreProductResponseDTO)){
+            throw new ProductNotFoundException("Product to be deleted not found!!!");
+        }
+        return fakeStoreProductResponseToProductResponse(fakeStoreProductResponseDTO);
     }
 
     @Override
