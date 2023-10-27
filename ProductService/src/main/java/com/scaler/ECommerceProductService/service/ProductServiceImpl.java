@@ -33,4 +33,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product) {
         return null;
     }
+
+    @Override
+    public ProductResponseDTO modifyProduct(Integer id, ProductRequestDTO product) {
+        return null;
+    }
 }

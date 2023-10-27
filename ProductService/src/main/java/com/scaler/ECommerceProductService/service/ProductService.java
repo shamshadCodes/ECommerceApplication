@@ -15,4 +15,6 @@ public interface ProductService {
     ProductResponseDTO deleteProduct(Integer id) throws ProductNotFoundException;
 
     ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product);
+
+    ProductResponseDTO modifyProduct(Integer id, ProductRequestDTO product);
 }
