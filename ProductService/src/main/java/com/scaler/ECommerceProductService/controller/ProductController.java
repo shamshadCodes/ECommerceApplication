@@ -3,6 +3,7 @@ package com.scaler.ECommerceProductService.controller;
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity getProductById(@PathVariable Integer id) {
+    public ResponseEntity getProductById(@PathVariable Integer id) throws ProductNotFoundException {
         ProductResponseDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }

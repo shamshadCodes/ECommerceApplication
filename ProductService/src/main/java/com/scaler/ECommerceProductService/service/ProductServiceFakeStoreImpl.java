@@ -5,6 +5,7 @@ import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.scaler.ECommerceProductService.mapper.ProductMapper.fakeStoreProductResponseToProductResponse;
+import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
@@ -32,17 +34,16 @@ public class ProductServiceFakeStoreImpl implements ProductService {
         for(FakeStoreProductResponseDTO fakeStoreProduct: products){
             productListResponseDTO.getProductList().add(fakeStoreProductResponseToProductResponse(fakeStoreProduct));
         }
-
         return productListResponseDTO;
     }
 
     @Override
-    public ProductResponseDTO getProductById(Integer id) {
-        String getProductByIdUrl = "https://fakestoreapi.com/products/" + id;
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<ProductResponseDTO> product = restTemplate.getForEntity(getProductByIdUrl, ProductResponseDTO.class);
-
-        return product.getBody();
+    public ProductResponseDTO getProductById(Integer id) throws ProductNotFoundException {
+        FakeStoreProductResponseDTO product = fakeStoreAPIClient.getProductById(id);
+        if(isNull(product)){
+            throw new ProductNotFoundException("Product not found with id: " + id);
+        }
+        return fakeStoreProductResponseToProductResponse(product);
     }
 
     @Override

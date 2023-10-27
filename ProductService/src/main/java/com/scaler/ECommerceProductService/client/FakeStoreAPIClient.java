@@ -1,6 +1,8 @@
 package com.scaler.ECommerceProductService.client;
 
+import com.scaler.ECommerceProductService.dto.FakeStoreProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
+import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +28,12 @@ public class FakeStoreAPIClient {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductResponseDTO[]> productsResponse = restTemplate.getForEntity(getAllProductsURL, FakeStoreProductResponseDTO[].class);
         return List.of(productsResponse.getBody());
+    }
+
+    public FakeStoreProductResponseDTO getProductById(int id){
+        String getProductByIdURL = fakeStoreAPIURL+fakeStoreAPIPathProduct+"/"+id;
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductResponseDTO> product = restTemplate.getForEntity(getProductByIdURL, FakeStoreProductResponseDTO.class);
+        return product.getBody();
     }
 }
