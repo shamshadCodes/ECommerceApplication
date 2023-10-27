@@ -13,19 +13,25 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.scaler.ECommerceProductService.mapper.ProductMapper.fakeStoreProductResponseToProductResponse;
+
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
     private FakeStoreAPIClient fakeStoreAPIClient;
+    private RestTemplateBuilder restTemplateBuilder;
 
-    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient) {
+    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient, RestTemplateBuilder restTemplateBuilder) {
         this.fakeStoreAPIClient = fakeStoreAPIClient;
+        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     @Override
     public ProductListResponseDTO getAllProducts() {
-        List<ProductResponseDTO> products = fakeStoreAPIClient.getAllProducts();
+        List<FakeStoreProductResponseDTO> products = fakeStoreAPIClient.getAllProducts();
         ProductListResponseDTO productListResponseDTO = new ProductListResponseDTO();
-        productListResponseDTO.setProductList(Arrays.asList(products.getBody()));
+        for(FakeStoreProductResponseDTO fakeStoreProduct: products){
+            productListResponseDTO.getProductList().add(fakeStoreProductResponseToProductResponse(fakeStoreProduct));
+        }
 
         return productListResponseDTO;
     }

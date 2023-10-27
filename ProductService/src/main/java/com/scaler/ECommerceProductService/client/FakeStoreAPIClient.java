@@ -13,10 +13,10 @@ import java.util.List;
 public class FakeStoreAPIClient {
     private RestTemplateBuilder restTemplateBuilder;
     private String fakeStoreAPIURL;
-    @Value("fakeStore.api.path.product")
+    @Value("${fakeStore.api.path.product}")
     private String fakeStoreAPIPathProduct;
 
-    public FakeStoreAPIClient (RestTemplateBuilder restTemplateBuilder, @Value("fakeStore.api.url") String fakeStoreAPIURL){
+    public FakeStoreAPIClient (RestTemplateBuilder restTemplateBuilder, @Value("${fakeStore.api.url}") String fakeStoreAPIURL){
         this.restTemplateBuilder = restTemplateBuilder;
         this.fakeStoreAPIURL = fakeStoreAPIURL;
     }

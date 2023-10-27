@@ -9,7 +9,7 @@ import java.util.List;
 public class ProductListResponseDTO {
     private List<ProductResponseDTO> productList;
 
-    public void setProductList(List<ProductResponseDTO> productList) {
-        this.productList = productList;
+    public ProductListResponseDTO(){
+        this.productList = new ArrayList<>();
     }
 }
