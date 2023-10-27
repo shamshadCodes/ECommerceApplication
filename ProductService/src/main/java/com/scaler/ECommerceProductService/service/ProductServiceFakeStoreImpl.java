@@ -1,5 +1,7 @@
 package com.scaler.ECommerceProductService.service;
 
+import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
+import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
@@ -8,23 +10,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
-    private RestTemplateBuilder restTemplateBuilder;
+    private FakeStoreAPIClient fakeStoreAPIClient;
 
-    public ProductServiceFakeStoreImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplateBuilder = restTemplateBuilder;
+    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient) {
+        this.fakeStoreAPIClient = fakeStoreAPIClient;
     }
 
     @Override
     public ProductListResponseDTO getAllProducts() {
-        String getAllProductsUrl = "https://fakestoreapi.com/products";
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<ProductResponseDTO[]> products = restTemplate.getForEntity(getAllProductsUrl, ProductResponseDTO[].class);
+        List<ProductResponseDTO> products = fakeStoreAPIClient.getAllProducts();
         ProductListResponseDTO productListResponseDTO = new ProductListResponseDTO();
-        productListResponseDTO.setProductList(List.of(products.getBody()));
+        productListResponseDTO.setProductList(Arrays.asList(products.getBody()));
 
         return productListResponseDTO;
     }
