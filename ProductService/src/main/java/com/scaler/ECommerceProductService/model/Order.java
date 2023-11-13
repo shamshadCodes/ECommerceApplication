@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "order")
+@Entity(name = "ecom_order")
 public class Order extends BaseModel{
     @ManyToMany
     private List<Product> products;
