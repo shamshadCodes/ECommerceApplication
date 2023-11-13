@@ -1,11 +1,10 @@
 package com.scaler.ECommerceProductService.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Getter
 @Setter
@@ -14,7 +13,8 @@ public class Product extends BaseModel{
     private String name;
     private String description;
     private String image;
-    private double price;
+    @OneToOne
+    private Price price;
     @ManyToOne
     private Category category;
 }
