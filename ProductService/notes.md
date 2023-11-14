@@ -1,0 +1,38 @@
+## Steps required for DB
+1. Create tables
+2. Insertion of data -> save() -> upsert [ insert and update ]
+3. query
+
+
+## Relationships
+
+### **OneToMany**
+
+-> DB -> PK of 1 side, goes as FK into M side.
+
+**Unidirectional**
+1. @ManyToOne -> by default, pk of 1[Category] side goes as fk into M[Product] side.
+2. @OneToMany -> by default, creates a mapping table.
+
+    @JoinColumn with @OneToMany -> to specify pk of 1 side goes as fk into M side.
+    convention for join column -> tableName_idFieldName
+
+**Bidirectional**
+1. No mapping table, PK of 1 side goes as FK of M side -> @JoinColumn(name = "tableName_idField")
+2. Set the owning side of the relationship -> mappedBy
+mappedBy -> owner class, with the opposite side's owner attribute
+ex -> Product and Category, category is owner
+
+       Category side
+       @OneToMany(mappedBy = "categoryAttributeAtProductSide")
+       private List<Product> product;
+
+### **ManyToMany**
+
+**Uni-directional**
+
+nothing required, single mapping table is generated
+
+**Bi-Directional** 
+
+mappedBy is required to generate single mapping table else, will generate 2 mapping tables
