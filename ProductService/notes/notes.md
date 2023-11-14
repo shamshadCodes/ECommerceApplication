@@ -36,3 +36,4 @@ nothing required, single mapping table is generated
 **Bi-Directional** 
 
 mappedBy is required to generate single mapping table else, will generate 2 mapping tables
+
