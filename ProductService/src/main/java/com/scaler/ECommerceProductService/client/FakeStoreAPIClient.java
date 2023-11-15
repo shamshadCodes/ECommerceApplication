@@ -2,8 +2,6 @@ package com.scaler.ECommerceProductService.client;
 
 import com.scaler.ECommerceProductService.dto.FakeStoreProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
-import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
-import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -14,8 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.List;
-
-import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 
 @Component
 public class FakeStoreAPIClient {

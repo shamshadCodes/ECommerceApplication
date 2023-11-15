@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductController(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
@@ -45,6 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
+    //TODO: Check and fix the PUT and PATCH mappings
     @PutMapping("/products/{id}")
     public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
         ProductResponseDTO productResponse = productService.updateProduct(id, product);
