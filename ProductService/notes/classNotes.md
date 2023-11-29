@@ -77,3 +77,5 @@ Verify : it does not create/udpate anything, it just verifies if the DB has all 
 
 Local development -> create or update
 Production -> verify [ generally tables via separate scripts like FlyWay, Liquibase 
+
+![image](https://github.com/shamshadCodes/ECommerce/assets/16875076/e302bab9-41d0-4aff-ad9b-5bb4276aa280)
