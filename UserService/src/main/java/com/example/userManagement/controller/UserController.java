@@ -1,15 +1,11 @@
 package com.example.userManagement.controller;
 
 import com.example.userManagement.dto.SetUserRolesRequestDTO;
-import com.example.userManagement.model.Role;
 import com.example.userManagement.model.User;
 import com.example.userManagement.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
