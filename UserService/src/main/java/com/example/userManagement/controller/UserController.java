@@ -24,12 +24,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserDetails(@PathVariable("id") UUID userId){
         User user = userService.getUserDetails(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/{id}/roles")
-    public ResponseEntity<List<Role>> setRoles(@PathVariable("id") UUID userId, @RequestBody SetUserRolesRequestDTO request){
-        List<Role> roles = userService.setUserRoles(userId, request.getRoleIds());
-        return ResponseEntity.ok(roles);
+    public ResponseEntity<User> setRoles(@PathVariable("id") UUID userId, @RequestBody SetUserRolesRequestDTO request){
+        User user = userService.setUserRoles(userId, request.getRoleIds());
+        return ResponseEntity.ok(user);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.userManagement.dto;
 
-import com.example.userManagement.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
