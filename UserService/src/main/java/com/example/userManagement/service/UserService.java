@@ -25,7 +25,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if(userOptional.isEmpty()){
-            throw new UserNotFoundException("Invalid User");
+            throw new UserNotFoundException("User does not exist");
         }
         User user = userOptional.get();
 
