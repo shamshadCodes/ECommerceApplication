@@ -1,5 +1,6 @@
 package com.example.userManagement.service;
 
+import com.example.userManagement.dto.UserDTO;
 import com.example.userManagement.exception.UserNotFoundException;
 import com.example.userManagement.model.Role;
 import com.example.userManagement.model.User;
@@ -11,7 +12,7 @@ import java.util.*;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     public UserService(UserRepository userRepository,
@@ -20,17 +21,18 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public User getUserDetails(UUID userId){
+    public UserDTO getUserDetails(UUID userId){
         Optional<User> userOptional = userRepository.findById(userId);
 
         if(userOptional.isEmpty()){
             throw new UserNotFoundException("Invalid User");
         }
+        User user = userOptional.get();
 
-        return userOptional.get();
+        return new UserDTO(user);
     }
 
-    public User setUserRoles(UUID userId, List<UUID> roleIds){
+    public UserDTO setUserRoles(UUID userId, List<UUID> roleIds){
         Optional<User> userOptional = userRepository.findById(userId);
         Set<Role> roles = roleRepository.findRolesByIdIn(roleIds);
 
@@ -41,7 +43,7 @@ public class UserService {
         User user = userOptional.get();
         user.setRoles(roles);
 
-        return user;
+        return new UserDTO(user);
 
     }
 }
