@@ -15,8 +15,8 @@ public class UserDTO {
     private Set<Role> roles;
 
     public UserDTO(User user) {
-        this.email = email;
-        this.name = name;
-        this.roles = roles;
+        this.email = user.getEmail();
+        this.name = user.getName();
+        this.roles = user.getRoles();
     }
 }
