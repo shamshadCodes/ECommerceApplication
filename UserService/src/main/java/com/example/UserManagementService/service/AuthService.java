@@ -13,6 +13,7 @@ import io.jsonwebtoken.security.MacAlgorithm;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMapAdapter;
 
@@ -28,18 +29,20 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AuthService(UserRepository userRepository,
-                       SessionRepository sessionRepository) {
+    public AuthService(UserRepository userRepository, SessionRepository sessionRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public UserDTO signUpUser(SignUpRequestDTO signUpRequestDTO) {
+    public UserDTO signUpUser(String name, String email, String password) {
+        String hashedPassword = bCryptPasswordEncoder.encode(password);
         User user = new User();
-        user.setName(signUpRequestDTO.getName());
-        user.setEmail(signUpRequestDTO.getEmail());
-        user.setPassword(signUpRequestDTO.getPassword());
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(hashedPassword);
 
         User savedUser = userRepository.save(user);
 
@@ -55,7 +58,7 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        if(!user.getPassword().equals(password)){
+        if(!bCryptPasswordEncoder.matches(password, user.getPassword())){
             throw new InvalidLoginCredentialsException("Invalid Credentials");
         }
 
