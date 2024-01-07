@@ -1,6 +1,5 @@
 package com.example.UserManagementService.service;
 
-import com.example.UserManagementService.dto.LoginRequestDTO;
 import com.example.UserManagementService.dto.SignUpRequestDTO;
 import com.example.UserManagementService.dto.UserDTO;
 import com.example.UserManagementService.exception.InvalidLoginCredentialsException;
@@ -13,7 +12,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.MacAlgorithm;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMapAdapter;
@@ -65,7 +63,7 @@ public class AuthService {
         MacAlgorithm macAlgorithm = Jwts.SIG.HS256;
         SecretKey key = macAlgorithm.key().build();
 
-        Long expiryDateInMilliseconds = LocalDate.now().plusDays(3).toEpochDay()*24*60*60*1000;
+        long expiryDateInMilliseconds = LocalDate.now().plusDays(3).toEpochDay()*24*60*60*1000;
 
         //Adding Claims
         Map<String, Object> jsonForJWT = new HashMap<>();
@@ -87,7 +85,7 @@ public class AuthService {
         session.setIssuedAt(new Date());
         session.setExpiringAt(new Date(expiryDateInMilliseconds));
 
-        Session savedSession = sessionRepository.save(session);
+        sessionRepository.save(session);
 
         MultiValueMapAdapter<String, String> headers = new MultiValueMapAdapter<>(new HashMap<>());
         headers.add(HttpHeaders.SET_COOKIE, token);
