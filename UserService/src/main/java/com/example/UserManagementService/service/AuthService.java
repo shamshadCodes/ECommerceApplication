@@ -1,6 +1,5 @@
 package com.example.UserManagementService.service;
 
-import com.example.UserManagementService.dto.SignUpRequestDTO;
 import com.example.UserManagementService.dto.UserDTO;
 import com.example.UserManagementService.exception.InvalidLoginCredentialsException;
 import com.example.UserManagementService.model.Session;
@@ -29,7 +28,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public AuthService(UserRepository userRepository, SessionRepository sessionRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
