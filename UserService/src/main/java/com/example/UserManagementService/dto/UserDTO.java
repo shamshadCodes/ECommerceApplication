@@ -1,7 +1,7 @@
-package com.example.userManagement.dto;
+package com.example.UserManagementService.dto;
 
-import com.example.userManagement.model.Role;
-import com.example.userManagement.model.User;
+import com.example.UserManagementService.model.Role;
+import com.example.UserManagementService.model.User;
 import lombok.Getter;
 import lombok.Setter;
 

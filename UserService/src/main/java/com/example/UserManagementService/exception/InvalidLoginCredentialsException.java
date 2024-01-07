@@ -1,4 +1,4 @@
-package com.example.userManagement.exception;
+package com.example.UserManagementService.exception;
 
 public class InvalidLoginCredentialsException extends RuntimeException {
     public InvalidLoginCredentialsException() {

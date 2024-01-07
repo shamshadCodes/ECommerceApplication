@@ -1,4 +1,4 @@
-package com.example.userManagement;
+package com.example.UserManagementService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

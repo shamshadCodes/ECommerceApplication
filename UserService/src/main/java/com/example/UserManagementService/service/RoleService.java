@@ -1,7 +1,7 @@
-package com.example.userManagement.service;
+package com.example.UserManagementService.service;
 
-import com.example.userManagement.model.Role;
-import com.example.userManagement.repository.RoleRepository;
+import com.example.UserManagementService.model.Role;
+import com.example.UserManagementService.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 @Service

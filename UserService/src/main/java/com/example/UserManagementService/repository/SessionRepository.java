@@ -1,6 +1,6 @@
-package com.example.userManagement.repository;
+package com.example.UserManagementService.repository;
 
-import com.example.userManagement.model.Session;
+import com.example.UserManagementService.model.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

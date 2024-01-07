@@ -1,10 +1,9 @@
-package com.example.userManagement.controller;
+package com.example.UserManagementService.controller;
 
-import com.example.userManagement.dto.LoginRequestDTO;
-import com.example.userManagement.dto.SignUpRequestDTO;
-import com.example.userManagement.dto.UserDTO;
-import com.example.userManagement.model.User;
-import com.example.userManagement.service.AuthService;
+import com.example.UserManagementService.dto.LoginRequestDTO;
+import com.example.UserManagementService.dto.SignUpRequestDTO;
+import com.example.UserManagementService.dto.UserDTO;
+import com.example.UserManagementService.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
-        UserDTO userDTO = authService.loginUser(loginRequestDTO);
-        return ResponseEntity.ok(userDTO);
+        return authService.loginUser(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
     }
 }

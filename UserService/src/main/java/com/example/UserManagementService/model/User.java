@@ -1,4 +1,4 @@
-package com.example.userManagement.model;
+package com.example.UserManagementService.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;

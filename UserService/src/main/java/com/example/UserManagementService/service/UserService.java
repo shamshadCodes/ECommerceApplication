@@ -1,11 +1,11 @@
-package com.example.userManagement.service;
+package com.example.UserManagementService.service;
 
-import com.example.userManagement.dto.UserDTO;
-import com.example.userManagement.exception.UserNotFoundException;
-import com.example.userManagement.model.Role;
-import com.example.userManagement.model.User;
-import com.example.userManagement.repository.RoleRepository;
-import com.example.userManagement.repository.UserRepository;
+import com.example.UserManagementService.dto.UserDTO;
+import com.example.UserManagementService.exception.UserNotFoundException;
+import com.example.UserManagementService.model.Role;
+import com.example.UserManagementService.model.User;
+import com.example.UserManagementService.repository.RoleRepository;
+import com.example.UserManagementService.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

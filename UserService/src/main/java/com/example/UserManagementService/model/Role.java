@@ -1,12 +1,8 @@
-package com.example.userManagement.model;
+package com.example.UserManagementService.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Entity
 @Getter

@@ -1,8 +1,8 @@
-package com.example.userManagement.controller;
+package com.example.UserManagementService.controller;
 
-import com.example.userManagement.dto.CreateRoleRequestDTO;
-import com.example.userManagement.model.Role;
-import com.example.userManagement.service.RoleService;
+import com.example.UserManagementService.dto.CreateRoleRequestDTO;
+import com.example.UserManagementService.model.Role;
+import com.example.UserManagementService.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

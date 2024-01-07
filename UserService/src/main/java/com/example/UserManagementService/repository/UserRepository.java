@@ -1,6 +1,6 @@
-package com.example.userManagement.repository;
+package com.example.UserManagementService.repository;
 
-import com.example.userManagement.model.User;
+import com.example.UserManagementService.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
