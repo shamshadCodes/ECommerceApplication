@@ -2,6 +2,7 @@ package com.example.UserManagementService.service;
 
 import com.example.UserManagementService.dto.UserDTO;
 import com.example.UserManagementService.exception.InvalidLoginCredentialsException;
+import com.example.UserManagementService.exception.SessionNotFoundException;
 import com.example.UserManagementService.model.Session;
 import com.example.UserManagementService.model.SessionStatus;
 import com.example.UserManagementService.model.User;
@@ -93,5 +94,18 @@ public class AuthService {
         headers.add(HttpHeaders.SET_COOKIE, token);
 
         return new ResponseEntity<>(new UserDTO(user), headers, HttpStatus.OK);
+    }
+
+    public void logoutUser(String token) {
+        Optional<Session> optionalSession = sessionRepository.findByToken(token);
+
+        if(optionalSession.isEmpty()){
+            throw new SessionNotFoundException("Invalid Session");
+        }
+
+        Session session = optionalSession.get();
+
+        session.setSessionStatus(SessionStatus.ENDED);
+        sessionRepository.save(session);
     }
 }
