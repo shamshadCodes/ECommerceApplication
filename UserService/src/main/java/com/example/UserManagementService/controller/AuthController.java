@@ -34,8 +34,9 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<SessionStatusDTO> validateSession(@RequestBody validateSessionRequestDTO validateSessionRequestDTO){
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<SessionDTO> validateSession(@RequestBody validateSessionRequestDTO validateSessionRequestDTO){
+        SessionDTO sessionDTO = authService.validateSession(validateSessionRequestDTO.getToken(), validateSessionRequestDTO.getUserID());
+        return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
     }
 
 }

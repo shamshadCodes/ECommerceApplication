@@ -1,5 +1,6 @@
 package com.example.UserManagementService.service;
 
+import com.example.UserManagementService.dto.SessionDTO;
 import com.example.UserManagementService.dto.UserDTO;
 import com.example.UserManagementService.exception.InvalidLoginCredentialsException;
 import com.example.UserManagementService.exception.SessionNotFoundException;
@@ -19,10 +20,7 @@ import org.springframework.util.MultiValueMapAdapter;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -100,12 +98,23 @@ public class AuthService {
         Optional<Session> optionalSession = sessionRepository.findByToken(token);
 
         if(optionalSession.isEmpty()){
-            throw new SessionNotFoundException("Invalid Session");
+            throw new SessionNotFoundException("Session not found");
         }
 
         Session session = optionalSession.get();
 
         session.setSessionStatus(SessionStatus.ENDED);
         sessionRepository.save(session);
+    }
+
+    public SessionDTO validateSession(String token, UUID userID) {
+        Optional<Session> optionalSession = sessionRepository.findByTokenAndUserId(token, userID);
+        if(optionalSession.isEmpty()){
+            throw new SessionNotFoundException("Session not found");
+        }
+
+        Session session = optionalSession.get();
+
+        return new SessionDTO(session);
     }
 }
