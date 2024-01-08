@@ -3,9 +3,7 @@ package com.example.UserManagementService.dto;
 import com.example.UserManagementService.model.Session;
 import com.example.UserManagementService.model.SessionStatus;
 import com.example.UserManagementService.model.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
+
 import lombok.Getter;
 import lombok.Setter;
 
