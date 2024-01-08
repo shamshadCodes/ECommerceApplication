@@ -1,10 +1,6 @@
 package com.example.UserManagementService.controller;
 
-import com.example.UserManagementService.dto.LoginRequestDTO;
-import com.example.UserManagementService.dto.LogoutRequestDTO;
-import com.example.UserManagementService.dto.SignUpRequestDTO;
-import com.example.UserManagementService.dto.UserDTO;
-import com.example.UserManagementService.model.User;
+import com.example.UserManagementService.dto.*;
 import com.example.UserManagementService.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,4 +32,10 @@ public class AuthController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/validate")
+    public ResponseEntity<SessionStatusDTO> validateSession(@RequestBody validateSessionRequestDTO validateSessionRequestDTO){
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
 }
