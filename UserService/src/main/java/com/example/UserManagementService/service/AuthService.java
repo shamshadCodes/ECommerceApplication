@@ -94,8 +94,8 @@ public class AuthService {
         return new ResponseEntity<>(new UserDTO(user), headers, HttpStatus.OK);
     }
 
-    public void logoutUser(String token) {
-        Optional<Session> optionalSession = sessionRepository.findByToken(token);
+    public void logoutUser(UUID userID, String token) {
+        Optional<Session> optionalSession = sessionRepository.findByTokenAndUserId(token, userID);
 
         if(optionalSession.isEmpty()){
             throw new SessionNotFoundException("Session not found");

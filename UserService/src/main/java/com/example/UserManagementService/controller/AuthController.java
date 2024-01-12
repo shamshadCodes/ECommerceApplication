@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -26,9 +28,9 @@ public class AuthController {
         return authService.loginUser(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
     }
 
-    @PutMapping("/logout")
-    public ResponseEntity<Void> logout (@RequestBody LogoutRequestDTO logoutRequestDTO){
-        authService.logoutUser(logoutRequestDTO.getToken());
+    @PutMapping("/logout/{id}")
+    public ResponseEntity<Void> logout (@PathVariable UUID id, @RequestHeader String token){
+        authService.logoutUser(id, token);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
