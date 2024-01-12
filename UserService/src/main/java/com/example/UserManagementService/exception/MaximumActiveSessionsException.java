@@ -1,8 +1,5 @@
 package com.example.UserManagementService.exception;
 
-import com.example.UserManagementService.dto.UserDTO;
-import org.springframework.http.ResponseEntity;
-
 public class MaximumActiveSessionsException extends RuntimeException{
     public MaximumActiveSessionsException() {
     }
