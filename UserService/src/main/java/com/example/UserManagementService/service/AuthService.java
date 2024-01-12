@@ -3,6 +3,7 @@ package com.example.UserManagementService.service;
 import com.example.UserManagementService.dto.SessionDTO;
 import com.example.UserManagementService.dto.UserDTO;
 import com.example.UserManagementService.exception.InvalidLoginCredentialsException;
+import com.example.UserManagementService.exception.MaximumActiveSessionsException;
 import com.example.UserManagementService.exception.SessionNotFoundException;
 import com.example.UserManagementService.model.Session;
 import com.example.UserManagementService.model.SessionStatus;
@@ -58,6 +59,11 @@ public class AuthService {
 
         if(!bCryptPasswordEncoder.matches(password, user.getPassword())){
             throw new InvalidLoginCredentialsException("Invalid Credentials");
+        }
+
+        Set<Session> allActiveSessions = sessionRepository.findAllByUserIdAndSessionStatus(user.getId(), SessionStatus.ACTIVE);
+        if(allActiveSessions.size() > 1){
+            throw new MaximumActiveSessionsException("Active sessions limit exceeded. Please logout from existing sessions.");
         }
 
         //Generating token
