@@ -113,7 +113,7 @@ public class AuthService {
         sessionRepository.save(session);
     }
 
-    public SessionDTO validateSession(String token, UUID userID) {
+    public SessionDTO validateSession(UUID userID, String token) {
         Optional<Session> optionalSession = sessionRepository.findByTokenAndUserId(token, userID);
         if(optionalSession.isEmpty()){
             throw new SessionNotFoundException("Session not found");
