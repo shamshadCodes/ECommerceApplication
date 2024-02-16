@@ -16,8 +16,8 @@ import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
-    private FakeStoreAPIClient fakeStoreAPIClient;
-    private RestTemplateBuilder restTemplateBuilder;
+    private final FakeStoreAPIClient fakeStoreAPIClient;
+    private final RestTemplateBuilder restTemplateBuilder;
 
     public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient, RestTemplateBuilder restTemplateBuilder) {
         this.fakeStoreAPIClient = fakeStoreAPIClient;
