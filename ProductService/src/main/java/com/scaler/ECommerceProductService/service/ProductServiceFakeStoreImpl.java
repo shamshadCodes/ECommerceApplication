@@ -3,10 +3,7 @@ package com.scaler.ECommerceProductService.service;
 import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
 import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -17,11 +14,9 @@ import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
     private final FakeStoreAPIClient fakeStoreAPIClient;
-    private final RestTemplateBuilder restTemplateBuilder;
 
-    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient, RestTemplateBuilder restTemplateBuilder) {
+    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient) {
         this.fakeStoreAPIClient = fakeStoreAPIClient;
-        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     @Override

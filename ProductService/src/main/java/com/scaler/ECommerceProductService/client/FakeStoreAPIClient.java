@@ -2,6 +2,7 @@ package com.scaler.ECommerceProductService.client;
 
 import com.scaler.ECommerceProductService.dto.FakeStoreProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -15,11 +16,12 @@ import java.util.List;
 
 @Component
 public class FakeStoreAPIClient {
-    private RestTemplateBuilder restTemplateBuilder;
-    private String fakeStoreAPIURL;
+    private final RestTemplateBuilder restTemplateBuilder;
+    private final String fakeStoreAPIURL;
     @Value("${fakeStore.api.path.product}")
     private String fakeStoreAPIPathProduct;
 
+    @Autowired
     public FakeStoreAPIClient (RestTemplateBuilder restTemplateBuilder, @Value("${fakeStore.api.url}") String fakeStoreAPIURL){
         this.restTemplateBuilder = restTemplateBuilder;
         this.fakeStoreAPIURL = fakeStoreAPIURL;
@@ -61,13 +63,6 @@ public class FakeStoreAPIClient {
 
         return null;
     }
-
-    /*public FakeStoreProductResponseDTO updateProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
-        String updateProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
-        RestTemplate restTemplate = new RestTemplate();
-        FakeStoreProductResponseDTO updatedProduct = restTemplate.patchForObject(updateProductURL, fakeStoreProductRequestDTO, FakeStoreProductResponseDTO.class);
-        return updatedProduct;
-    }*/
 
     public FakeStoreProductResponseDTO updateProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
         String updateProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
