@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -21,39 +22,39 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
-    public ResponseEntity getAllProducts() {
+    @GetMapping
+    public ResponseEntity<ProductListResponseDTO> getAllProducts() {
         ProductListResponseDTO products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/products/{id}")
-    public ResponseEntity getProductById(@PathVariable Integer id) throws ProductNotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Integer id) throws ProductNotFoundException {
         ProductResponseDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/products")
-    public ResponseEntity addProduct(@RequestBody ProductRequestDTO product) {
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
         ProductResponseDTO productResponse = productService.addProduct(product);
         return ResponseEntity.ok(productResponse);
     }
 
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity deleteProduct(@PathVariable Integer id) throws ProductNotFoundException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> deleteProduct(@PathVariable Integer id) throws ProductNotFoundException {
         ProductResponseDTO productResponse = productService.deleteProduct(id);
         return ResponseEntity.ok(productResponse);
     }
 
     //TODO: Check and fix the PUT and PATCH mappings
-    @PutMapping("/products/{id}")
-    public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
         ProductResponseDTO productResponse = productService.updateProduct(id, product);
         return ResponseEntity.ok(productResponse);
     }
 
-    @PatchMapping("/products/{id}")
-    public ResponseEntity modifyProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
         ProductResponseDTO productResponse = productService.modifyProduct(id, product);
         return ResponseEntity.ok(productResponse);
     }
