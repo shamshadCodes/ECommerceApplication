@@ -101,7 +101,7 @@ public class FakeStoreAPIClient {
         try {
             RequestEntity<Void> requestEntity = new RequestEntity<>(HttpMethod.PATCH, new URI(updateProductURL));
             ResponseEntity<FakeStoreProductResponseDTO> updatedProduct = restTemplate.exchange(requestEntity, FakeStoreProductResponseDTO.class);
-            return fakeStoreProductToProduct(updatedProduct.getBody())
+            return fakeStoreProductToProduct(updatedProduct.getBody());
         }catch (Exception e){
             e.printStackTrace();
         }
