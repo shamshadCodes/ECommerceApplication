@@ -1,41 +1,49 @@
 package com.scaler.ECommerceProductService.service;
 
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
+import com.scaler.ECommerceProductService.Repository.ProductRepository;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
-import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("ProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
+    private final ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
-    public ProductListResponseDTO getAllProducts() {
-        ProductRequestDTO product1 = new ProductRequestDTO();
+    public List<Product> getAllProducts() {
+        List<Product> productList = productRepository.findAll();
+
         return null;
     }
 
     @Override
-    public ProductResponseDTO getProductById(Integer id) {
+    public Product getProductById(Integer id) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO addProduct(ProductRequestDTO product) {
+    public Product addProduct(ProductRequestDTO product) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO deleteProduct(Integer id) {
+    public Product deleteProduct(Integer id) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product) {
+    public Product updateProduct(Integer id, ProductRequestDTO product) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO modifyProduct(Integer id, ProductRequestDTO product) {
+    public Product modifyProduct(Integer id, ProductRequestDTO product) {
         return null;
     }
 }

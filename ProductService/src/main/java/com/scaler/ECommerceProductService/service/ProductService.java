@@ -1,20 +1,21 @@
 package com.scaler.ECommerceProductService.service;
 
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
-import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
+import com.scaler.ECommerceProductService.model.Product;
+
+import java.util.List;
 
 public interface ProductService {
-    ProductListResponseDTO getAllProducts();
+    List<Product> getAllProducts();
 
-    ProductResponseDTO getProductById(Integer id) throws ProductNotFoundException;
+    Product getProductById(Integer id) throws ProductNotFoundException;
 
-    ProductResponseDTO addProduct(ProductRequestDTO product);
+    Product addProduct(ProductRequestDTO product);
 
-    ProductResponseDTO deleteProduct(Integer id) throws ProductNotFoundException;
+    Product deleteProduct(Integer id) throws ProductNotFoundException;
 
-    ProductResponseDTO updateProduct(Integer id, ProductRequestDTO product);
+    Product updateProduct(Integer id, ProductRequestDTO product);
 
-    ProductResponseDTO modifyProduct(Integer id, ProductRequestDTO product);
+    Product modifyProduct(Integer id, ProductRequestDTO product);
 }
