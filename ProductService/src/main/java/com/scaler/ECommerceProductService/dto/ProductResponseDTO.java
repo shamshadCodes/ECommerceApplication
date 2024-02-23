@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductResponseDTO {
-    private int id;
+    private String id;
     private String title;
     private String description;
     private String category;
