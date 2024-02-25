@@ -11,4 +11,6 @@ public class ProductRequestDTO {
     private String category;
     private String image;
     private double price;
+    private String currencyCode;
+    private double discountPercentage;
 }
