@@ -10,6 +10,7 @@ import com.scaler.ECommerceProductService.model.Price;
 import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.stereotype.Service;
 
+import java.util.Currency;
 import java.util.List;
 
 @Service
@@ -35,23 +36,23 @@ public class InitServiceImpl implements InitService{
 
         Price pricePhone = new Price();
         pricePhone.setPrice(50000);
-        pricePhone.setCurrency("Rupees");
+        pricePhone.setCurrency(Currency.getInstance("INR"));
         pricePhone.setDiscount(10);
 
         Price priceLaptop = new Price();
         priceLaptop.setPrice(100000);
         priceLaptop.setDiscount(15);
-        priceLaptop.setCurrency("Rupees");
+        priceLaptop.setCurrency(Currency.getInstance("INR"));
 
         Price priceHeadphone = new Price();
         priceHeadphone.setPrice(20000);
         priceHeadphone.setDiscount(25);
-        priceHeadphone.setCurrency("Rupees");
+        priceHeadphone.setCurrency(Currency.getInstance("INR"));
 
         Price priceWatch = new Price();
         priceWatch.setPrice(10000);
         priceWatch.setDiscount(0);
-        priceWatch.setCurrency("Rupees");
+        priceWatch.setCurrency(Currency.getInstance("INR"));
 
         pricePhone = priceRepository.save(pricePhone);
         priceLaptop = priceRepository.save(priceLaptop);
