@@ -83,17 +83,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleteProduct(Integer id) {
+    public Product deleteProduct(String id) {
         return null;
     }
 
     @Override
-    public Product updateProduct(Integer id, ProductRequestDTO product) {
+    public Product updateProduct(String id, ProductRequestDTO product) {
         return null;
     }
 
     @Override
-    public Product modifyProduct(Integer id, ProductRequestDTO product) {
+    public Product modifyProduct(String id, ProductRequestDTO product) {
         return null;
     }
 }

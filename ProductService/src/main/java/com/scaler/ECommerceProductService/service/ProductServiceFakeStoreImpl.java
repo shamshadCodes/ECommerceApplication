@@ -42,8 +42,8 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     }
 
     @Override
-    public Product deleteProduct(Integer id) throws ProductNotFoundException {
-        Product fakeStoreProduct = fakeStoreAPIClient.deleteProduct(id);
+    public Product deleteProduct(String id) throws ProductNotFoundException {
+        Product fakeStoreProduct = fakeStoreAPIClient.deleteProduct(Integer.parseInt(id));
         if(isNull(fakeStoreProduct)){
             throw new ProductNotFoundException("Product to be deleted not found!!!");
         }
@@ -51,16 +51,16 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Integer id, ProductRequestDTO product) {
+    public Product updateProduct(String id, ProductRequestDTO product) {
         FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(product);
 
-        return fakeStoreAPIClient.updateProduct(id, fakeStoreProductRequestDTO);
+        return fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
     }
 
     @Override
-    public Product modifyProduct(Integer id, ProductRequestDTO product) {
+    public Product modifyProduct(String id, ProductRequestDTO product) {
         FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(product);
 
-        return fakeStoreAPIClient.updateProduct(id, fakeStoreProductRequestDTO);
+        return fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
     }
 }

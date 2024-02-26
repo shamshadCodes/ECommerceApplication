@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> deleteProduct(@PathVariable Integer id) throws ProductNotFoundException {
+    public ResponseEntity<ProductResponseDTO> deleteProduct(@PathVariable String id) throws ProductNotFoundException {
         Product deletedProduct = productService.deleteProduct(id);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(deletedProduct);
 
@@ -62,7 +62,7 @@ public class ProductController {
 
     //TODO: Check and fix the PUT and PATCH mappings
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable String id, @RequestBody ProductRequestDTO product) {
         Product updatedProduct = productService.updateProduct(id, product);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(updatedProduct);
 
@@ -70,7 +70,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable Integer id, @RequestBody ProductRequestDTO product) {
+    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable String id, @RequestBody ProductRequestDTO product) {
         Product modifiedProduct = productService.modifyProduct(id, product);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(modifiedProduct);
 
