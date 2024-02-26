@@ -1,5 +1,6 @@
 package com.scaler.ECommerceProductService.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -13,8 +14,8 @@ public class Product extends BaseModel{
     private String title;
     private String description;
     private String image;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Price price;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
 }

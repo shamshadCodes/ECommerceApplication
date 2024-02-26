@@ -8,12 +8,14 @@ import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Order;
 import com.scaler.ECommerceProductService.model.Price;
 import com.scaler.ECommerceProductService.model.Product;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Currency;
 import java.util.List;
 
 @Service
+@Transactional
 public class InitServiceImpl implements InitService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -31,7 +33,6 @@ public class InitServiceImpl implements InitService{
     public void initialize(){
         Category electronics = new Category();
         electronics.setCategoryName("Electronics");
-
         electronics = categoryRepository.save(electronics);
 
         Price pricePhone = new Price();
