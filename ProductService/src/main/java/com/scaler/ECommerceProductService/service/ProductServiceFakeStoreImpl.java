@@ -26,8 +26,8 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Integer id) throws ProductNotFoundException {
-        Product fakeStoreProduct = fakeStoreAPIClient.getProductById(id);
+    public Product getProductById(String id) throws ProductNotFoundException {
+        Product fakeStoreProduct = fakeStoreAPIClient.getProductById(Integer.parseInt(id));
         if(isNull(fakeStoreProduct)){
             throw new ProductNotFoundException("Product not found with id: " + id);
         }

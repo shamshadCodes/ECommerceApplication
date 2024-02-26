@@ -24,7 +24,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Autowired
-    public ProductController(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
+    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService) {
         this.productService = productService;
     }
 
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Integer id) throws ProductNotFoundException {
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable String id) throws ProductNotFoundException {
         Product product = productService.getProductById(id);
 
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(product);
