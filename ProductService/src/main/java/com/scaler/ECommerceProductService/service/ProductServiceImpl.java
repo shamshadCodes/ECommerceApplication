@@ -34,14 +34,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductById(String id) throws ProductNotFoundException {
-        String uuidFormattedString = id.replaceFirst(
-                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{12})",
-                "$1-$2-$3-$4-$5"
-        );
-
-        System.out.print(UUID.fromString(uuidFormattedString));
-
         Optional<Product> productOptional;
+
         try{
             productOptional = productRepository.findById(id);
         }catch (DataAccessException e){
@@ -83,8 +77,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleteProduct(String id) {
-        return null;
+    public Product deleteProduct(String id) throws ProductNotFoundException {
+        Optional<Product> productOptional;
+        //Searching for the product
+        try{
+            productOptional = productRepository.findById(id);
+        }catch (DataAccessException e){
+            throw new ProductServiceException("Error Retrieving the product", e);
+        }
+
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
+        }
+
+        try{
+            productRepository.deleteById(id);
+        }catch (DataAccessException e){
+            throw new ProductServiceException("Error retrieving the product", e);
+        }
+
+        return productOptional.get();
     }
 
     @Override
