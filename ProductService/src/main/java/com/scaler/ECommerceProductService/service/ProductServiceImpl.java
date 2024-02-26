@@ -3,6 +3,7 @@ package com.scaler.ECommerceProductService.service;
 import com.scaler.ECommerceProductService.Repository.CategoryRepository;
 import com.scaler.ECommerceProductService.Repository.ProductRepository;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
+import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
 import com.scaler.ECommerceProductService.model.Category;
@@ -51,8 +52,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(ProductRequestDTO requestDTO) {
+    public Product addProduct(ProductRequestDTO requestDTO) throws ProductAlreadyExistsException {
         Product product = new Product();
+        Optional<Product> productOptional = productRepository.findByTitleIgnoreCase(requestDTO.getTitle());
+        if(productOptional.isEmpty()){
+            throw new ProductAlreadyExistsException("The product you are trying to save already exists!");
+        }
+
         String categoryName = requestDTO.getCategory();
         Category requestedCategory;
 

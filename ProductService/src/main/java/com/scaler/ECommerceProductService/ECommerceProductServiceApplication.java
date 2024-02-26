@@ -18,6 +18,6 @@ public class ECommerceProductServiceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception{
-		initService.initialize();
+//		initService.initialize();
 	}
 }
