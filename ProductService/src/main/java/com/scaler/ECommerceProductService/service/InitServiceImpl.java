@@ -15,10 +15,10 @@ import java.util.List;
 
 @Service
 public class InitServiceImpl implements InitService{
-    private ProductRepository productRepository;
-    private CategoryRepository categoryRepository;
-    private PriceRepository priceRepository;
-    private OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final PriceRepository priceRepository;
+    private final OrderRepository orderRepository;
 
     public InitServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, PriceRepository priceRepository, OrderRepository orderRepository) {
         this.productRepository = productRepository;
