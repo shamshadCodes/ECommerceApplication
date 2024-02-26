@@ -1,5 +1,6 @@
 package com.scaler.ECommerceProductService.service;
 
+import com.scaler.ECommerceProductService.Repository.CategoryRepository;
 import com.scaler.ECommerceProductService.Repository.ProductRepository;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
@@ -13,14 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service("ProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -50,16 +53,29 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product addProduct(ProductRequestDTO requestDTO) {
         Product product = new Product();
+        String categoryName = requestDTO.getCategory();
+        Category requestedCategory;
 
-        Category category = new Category();
-        category.setCategoryName(requestDTO.getCategory());
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
+        if(categoryOptional.isEmpty()){
+            requestedCategory = new Category();
+            requestedCategory.setCategoryName(requestDTO.getCategory());
+        }
+        else{
+            requestedCategory = categoryOptional.get();
+        }
 
         Price price = new Price();
         price.setPrice(requestDTO.getPrice());
-        price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode()));
+        if(requestDTO.getCurrencyCode() == null){
+            price.setCurrency(Currency.getInstance("INR"));
+        }
+        else{
+            price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode()));
+        }
         price.setDiscount(requestDTO.getDiscountPercentage());
 
-        product.setCategory(category);
+        product.setCategory(requestedCategory);
         product.setPrice(price);
         product.setTitle(requestDTO.getTitle());
         product.setDescription(requestDTO.getDescription());
