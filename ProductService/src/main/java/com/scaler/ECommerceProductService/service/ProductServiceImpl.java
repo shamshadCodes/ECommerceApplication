@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     public Product addProduct(ProductRequestDTO requestDTO) throws ProductAlreadyExistsException {
         Product product = new Product();
         Optional<Product> productOptional = productRepository.findByTitleIgnoreCase(requestDTO.getTitle());
-        if(productOptional.isEmpty()){
+        if(productOptional.isPresent()){
             throw new ProductAlreadyExistsException("The product you are trying to save already exists!");
         }
 
@@ -73,12 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
         Price price = new Price();
         price.setPrice(requestDTO.getPrice());
-        if(requestDTO.getCurrencyCode() == null){
-            price.setCurrency(Currency.getInstance("INR"));
-        }
-        else{
-            price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode()));
-        }
+        price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
         price.setDiscount(requestDTO.getDiscountPercentage());
 
         product.setCategory(requestedCategory);
@@ -122,12 +117,54 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(String id, ProductRequestDTO product) {
-        return null;
+    public Product updateProduct(String id, ProductRequestDTO requestDTO) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
+        }
+
+        Category requestedCategory;
+
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(requestDTO.getCategory());
+        if(categoryOptional.isEmpty()){
+            requestedCategory = new Category();
+            requestedCategory.setCategoryName(requestDTO.getCategory());
+        }
+        else{
+            requestedCategory = categoryOptional.get();
+        }
+
+        Product product = productOptional.get();
+        Price price = new Price();
+
+        if(product.getPrice().getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())){
+            price = product.getPrice();
+        }
+        else{
+            price.setPrice(requestDTO.getPrice());
+            price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
+            price.setDiscount(requestDTO.getDiscountPercentage());
+        }
+
+        product.setTitle(requestDTO.getTitle());
+        product.setImage(requestDTO.getImage());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(price);
+        product.setCategory(requestedCategory);
+
+        Product updatedProduct;
+
+        try{
+            updatedProduct = productRepository.save(product);
+        } catch (DataAccessException e){
+            throw new ProductServiceException("Error saving the updated product!", e);
+        }
+
+        return updatedProduct;
     }
 
     @Override
-    public Product modifyProduct(String id, ProductRequestDTO product) {
+    public Product modifyProduct(String id, ProductRequestDTO requestDTO) {
         return null;
     }
 }

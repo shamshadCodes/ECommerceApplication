@@ -3,10 +3,12 @@ package com.scaler.ECommerceProductService.controller;
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.model.Product;
 import com.scaler.ECommerceProductService.service.ProductService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +47,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
+    public ResponseEntity<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO product) throws ProductAlreadyExistsException {
         Product savedProduct = productService.addProduct(product);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(savedProduct);
 
@@ -62,16 +64,16 @@ public class ProductController {
 
     //TODO: Check and fix the PUT and PATCH mappings
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable String id, @RequestBody ProductRequestDTO product) {
-        Product updatedProduct = productService.updateProduct(id, product);
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequestDTO requestDTO) throws ProductNotFoundException {
+        Product updatedProduct = productService.updateProduct(id, requestDTO);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(updatedProduct);
 
         return ResponseEntity.ok(productResponseDTO);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable String id, @RequestBody ProductRequestDTO product) {
-        Product modifiedProduct = productService.modifyProduct(id, product);
+    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable String id, @RequestBody ProductRequestDTO requestDTO) {
+        Product modifiedProduct = productService.modifyProduct(id, requestDTO);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(modifiedProduct);
 
         return ResponseEntity.ok(productResponseDTO);
