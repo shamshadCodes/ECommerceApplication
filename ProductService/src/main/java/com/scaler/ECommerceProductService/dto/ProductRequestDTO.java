@@ -17,7 +17,7 @@ public class ProductRequestDTO {
     @NotBlank(message = "Category cannot be blank.")
     private String category;
 
-    private String image;
+    private String image="placeholder.jpg";
 
     @DecimalMin(value = "0.01", message = "Price must be greater than 0.")
     private double price;

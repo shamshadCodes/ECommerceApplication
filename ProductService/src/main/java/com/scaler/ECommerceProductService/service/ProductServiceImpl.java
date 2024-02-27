@@ -135,21 +135,27 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product product = productOptional.get();
-        Price price = new Price();
 
-        if(product.getPrice().getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())){
-            price = product.getPrice();
+        Price updatedPrice;
+        Price currentPrice = product.getPrice();
+
+        if(!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
+                || currentPrice.getPrice() != requestDTO.getPrice()
+                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage()
+        ){
+            updatedPrice = new Price();
+            updatedPrice.setPrice(requestDTO.getPrice());
+            updatedPrice.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
+            updatedPrice.setDiscount(requestDTO.getDiscountPercentage());
         }
         else{
-            price.setPrice(requestDTO.getPrice());
-            price.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
-            price.setDiscount(requestDTO.getDiscountPercentage());
+            updatedPrice = product.getPrice();
         }
 
         product.setTitle(requestDTO.getTitle());
         product.setImage(requestDTO.getImage());
         product.setDescription(requestDTO.getDescription());
-        product.setPrice(price);
+        product.setPrice(updatedPrice);
         product.setCategory(requestedCategory);
 
         Product updatedProduct;
@@ -164,7 +170,68 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product modifyProduct(String id, ProductRequestDTO requestDTO) {
-        return null;
+    public Product modifyProduct(String id, ProductRequestDTO requestDTO) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
+        }
+
+        Product currentProduct = productOptional.get();
+
+        Category updatedCategory;
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(requestDTO.getCategory());
+
+        if(requestDTO.getCategory() == null
+                || requestDTO.getCategory().isBlank()
+                || categoryOptional.isEmpty()
+                || categoryOptional.get().equals(currentProduct.getCategory())
+        ){
+            updatedCategory = currentProduct.getCategory();
+        }
+        else{
+            updatedCategory = new Category();
+            updatedCategory.setCategoryName(requestDTO.getCategory());
+        }
+
+        Price updatedPrice;
+        Price currentPrice = currentProduct.getPrice();
+
+        if(requestDTO.getPrice() > 0 &&
+                (!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
+                || currentPrice.getPrice() != requestDTO.getPrice()
+                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage())
+        ){
+            updatedPrice = new Price();
+            updatedPrice.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode()));
+            updatedPrice.setDiscount(requestDTO.getDiscountPercentage());
+            updatedPrice.setPrice(requestDTO.getPrice());
+        }
+        else{
+            updatedPrice = currentPrice;
+        }
+
+        currentProduct.setCategory(updatedCategory);
+        currentProduct.setPrice(updatedPrice);
+
+        if(requestDTO.getTitle() != null && !requestDTO.getTitle().isBlank() && requestDTO.getTitle().trim().length() >= 3) {
+            currentProduct.setTitle(requestDTO.getTitle());
+        }
+
+        if(requestDTO.getDescription() != null && !requestDTO.getDescription().isBlank() && requestDTO.getDescription().trim().length() >= 5){
+            currentProduct.setDescription(requestDTO.getDescription());
+        }
+
+        if(!requestDTO.getImage().equalsIgnoreCase("placeholder.jpg") && !requestDTO.getImage().isBlank() && !requestDTO.getImage().equalsIgnoreCase(currentProduct.getImage())){
+            currentProduct.setImage(requestDTO.getImage());
+        }
+
+        Product modifiedProduct;
+        try {
+            modifiedProduct = productRepository.save(currentProduct);
+        } catch (DataAccessException e) {
+            throw new ProductServiceException("Error while modifying the product!", e);
+        }
+
+        return modifiedProduct;
     }
 }

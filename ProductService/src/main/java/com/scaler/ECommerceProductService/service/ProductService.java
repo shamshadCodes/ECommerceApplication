@@ -19,5 +19,5 @@ public interface ProductService {
 
     Product updateProduct(String id, ProductRequestDTO product) throws ProductNotFoundException;
 
-    Product modifyProduct(String id, ProductRequestDTO product);
+    Product modifyProduct(String id, ProductRequestDTO product) throws ProductNotFoundException;
 }

@@ -72,7 +72,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable String id, @RequestBody ProductRequestDTO requestDTO) {
+    public ResponseEntity<ProductResponseDTO> modifyProduct(@PathVariable String id, @RequestBody ProductRequestDTO requestDTO) throws ProductNotFoundException {
         Product modifiedProduct = productService.modifyProduct(id, requestDTO);
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(modifiedProduct);
 
