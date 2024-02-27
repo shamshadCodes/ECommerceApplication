@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
         Category requestedCategory = getRequestedCategory(requestDTO.getCategory());
 
-        Price updatedPrice = getUpdatedPrice(requestDTO, product.getPrice());
+        Price updatedPrice = getRequestedPrice(requestDTO, product.getPrice());
 
         product.setTitle(requestDTO.getTitle());
         product.setImage(requestDTO.getImage());
@@ -104,17 +104,21 @@ public class ProductServiceImpl implements ProductService {
 
         if(requestDTO.getCategory() == null
                 || requestDTO.getCategory().isBlank()
-                || categoryOptional.isEmpty()
-                || categoryOptional.get().equals(currentProduct.getCategory())
+                || (categoryOptional.isPresent() && categoryOptional.get().equals(currentProduct.getCategory()))
         ){
             updatedCategory = currentProduct.getCategory();
         }
         else{
-            updatedCategory = new Category();
-            updatedCategory.setCategoryName(requestDTO.getCategory());
+            if(categoryOptional.isPresent()){
+                updatedCategory = categoryOptional.get();
+            }
+            else{
+                updatedCategory = new Category();
+                updatedCategory.setCategoryName(requestDTO.getCategory());
+            }
         }
 
-        Price updatedPrice = getUpdatedPrice(requestDTO, currentProduct.getPrice());
+        Price updatedPrice = getRequestedPrice(requestDTO, currentProduct.getPrice());
 
         currentProduct.setCategory(updatedCategory);
         currentProduct.setPrice(updatedPrice);
@@ -149,12 +153,13 @@ public class ProductServiceImpl implements ProductService {
         return productOptional.get();
     }
 
-    private static Price getUpdatedPrice(ProductRequestDTO requestDTO, Price currentPrice) {
+    private static Price getRequestedPrice(ProductRequestDTO requestDTO, Price currentPrice) {
         Price updatedPrice;
 
-        if(!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
-                || currentPrice.getPrice() != requestDTO.getPrice()
-                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage()
+        if(requestDTO.getPrice() > 0 &&
+                (!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
+                        || currentPrice.getPrice() != requestDTO.getPrice()
+                        || currentPrice.getDiscount() != requestDTO.getDiscountPercentage())
         ){
             updatedPrice = new Price();
             updatedPrice.setPrice(requestDTO.getPrice());
