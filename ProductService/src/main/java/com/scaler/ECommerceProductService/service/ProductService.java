@@ -1,6 +1,7 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
+import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public interface ProductService {
     List<Product> getAllProducts() throws ProductServiceException;
+    List<Product> getProductsByCategory(String category) throws ProductServiceException, CategoryNotFoundException;
 
     Product getProductById(String id) throws ProductNotFoundException;
 

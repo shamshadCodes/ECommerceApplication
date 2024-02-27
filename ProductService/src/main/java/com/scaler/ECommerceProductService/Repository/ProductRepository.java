@@ -1,5 +1,6 @@
 package com.scaler.ECommerceProductService.Repository;
 
+import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -18,9 +19,11 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     @Override
     Optional<Product> findById(@NonNull String id);
 
-    Optional<Product> findByTitleIgnoreCase(String title);
-
     @NonNull
     @Override
     <S extends Product> S save(@NonNull S product);
+
+    Optional<Product> findByTitleIgnoreCase(String title);
+
+    List<Product> findAllByCategory(Category category);
 }

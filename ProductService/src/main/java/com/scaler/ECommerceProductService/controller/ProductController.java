@@ -3,6 +3,7 @@ package com.scaler.ECommerceProductService.controller;
 import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
 import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.model.Product;
@@ -33,6 +34,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ProductListResponseDTO> getAllProducts() {
         List<Product> products = productService.getAllProducts();
+        ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
+        return ResponseEntity.ok(productListResponseDTO);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ProductListResponseDTO> getProductsByCategory(@RequestParam String category) throws CategoryNotFoundException {
+        List<Product> products = productService.getProductsByCategory(category);
         ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
         return ResponseEntity.ok(productListResponseDTO);
     }

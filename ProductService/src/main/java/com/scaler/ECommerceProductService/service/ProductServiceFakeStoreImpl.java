@@ -3,6 +3,7 @@ package com.scaler.ECommerceProductService.service;
 import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
 import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
+import com.scaler.ECommerceProductService.exception.ProductServiceException;
 import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,11 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     public List<Product> getAllProducts() {
 
         return fakeStoreAPIClient.getAllProducts();
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) throws ProductServiceException {
+        return null;
     }
 
     @Override
