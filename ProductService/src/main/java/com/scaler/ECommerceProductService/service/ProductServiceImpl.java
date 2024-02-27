@@ -38,17 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductById(String id) throws ProductNotFoundException {
-        Optional<Product> productOptional;
-
-        try{
-            productOptional = productRepository.findById(id);
-        }catch (DataAccessException e){
-            throw new ProductServiceException("Error retrieving the product", e);
-        }
-        if(productOptional.isEmpty()){
-            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
-        }
-        return productOptional.get();
+        return fetchProduct(id);
     }
 
     @Override
@@ -59,17 +49,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductAlreadyExistsException("The product you are trying to save already exists!");
         }
 
-        String categoryName = requestDTO.getCategory();
-        Category requestedCategory;
-
-        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
-        if(categoryOptional.isEmpty()){
-            requestedCategory = new Category();
-            requestedCategory.setCategoryName(requestDTO.getCategory());
-        }
-        else{
-            requestedCategory = categoryOptional.get();
-        }
+        Category requestedCategory = getRequestedCategory(requestDTO.getCategory());
 
         Price price = new Price();
         price.setPrice(requestDTO.getPrice());
@@ -82,30 +62,12 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(requestDTO.getDescription());
         product.setImage(requestDTO.getImage());
 
-        Product savedProduct;
-
-        try{
-            savedProduct = productRepository.save(product);
-        } catch (DataAccessException e){
-            throw new ProductServiceException("Error saving the product!", e);
-        }
-
-        return savedProduct;
+        return saveProduct(product);
     }
 
     @Override
     public Product deleteProduct(String id) throws ProductNotFoundException {
-        Optional<Product> productOptional;
-        //Searching for the product
-        try{
-            productOptional = productRepository.findById(id);
-        }catch (DataAccessException e){
-            throw new ProductServiceException("Error Retrieving the product", e);
-        }
-
-        if(productOptional.isEmpty()){
-            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
-        }
+        Product product = fetchProduct(id);
 
         try{
             productRepository.deleteById(id);
@@ -113,44 +75,16 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductServiceException("Error retrieving the product", e);
         }
 
-        return productOptional.get();
+        return product;
     }
 
     @Override
     public Product updateProduct(String id, ProductRequestDTO requestDTO) throws ProductNotFoundException {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if(productOptional.isEmpty()){
-            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
-        }
+        Product product = fetchProduct(id);
 
-        Category requestedCategory;
+        Category requestedCategory = getRequestedCategory(requestDTO.getCategory());
 
-        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(requestDTO.getCategory());
-        if(categoryOptional.isEmpty()){
-            requestedCategory = new Category();
-            requestedCategory.setCategoryName(requestDTO.getCategory());
-        }
-        else{
-            requestedCategory = categoryOptional.get();
-        }
-
-        Product product = productOptional.get();
-
-        Price updatedPrice;
-        Price currentPrice = product.getPrice();
-
-        if(!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
-                || currentPrice.getPrice() != requestDTO.getPrice()
-                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage()
-        ){
-            updatedPrice = new Price();
-            updatedPrice.setPrice(requestDTO.getPrice());
-            updatedPrice.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
-            updatedPrice.setDiscount(requestDTO.getDiscountPercentage());
-        }
-        else{
-            updatedPrice = product.getPrice();
-        }
+        Price updatedPrice = getUpdatedPrice(requestDTO, product.getPrice());
 
         product.setTitle(requestDTO.getTitle());
         product.setImage(requestDTO.getImage());
@@ -158,25 +92,12 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(updatedPrice);
         product.setCategory(requestedCategory);
 
-        Product updatedProduct;
-
-        try{
-            updatedProduct = productRepository.save(product);
-        } catch (DataAccessException e){
-            throw new ProductServiceException("Error saving the updated product!", e);
-        }
-
-        return updatedProduct;
+        return saveProduct(product);
     }
 
     @Override
     public Product modifyProduct(String id, ProductRequestDTO requestDTO) throws ProductNotFoundException {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if(productOptional.isEmpty()){
-            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
-        }
-
-        Product currentProduct = productOptional.get();
+        Product currentProduct = fetchProduct(id);
 
         Category updatedCategory;
         Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(requestDTO.getCategory());
@@ -193,45 +114,78 @@ public class ProductServiceImpl implements ProductService {
             updatedCategory.setCategoryName(requestDTO.getCategory());
         }
 
-        Price updatedPrice;
-        Price currentPrice = currentProduct.getPrice();
-
-        if(requestDTO.getPrice() > 0 &&
-                (!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
-                || currentPrice.getPrice() != requestDTO.getPrice()
-                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage())
-        ){
-            updatedPrice = new Price();
-            updatedPrice.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode()));
-            updatedPrice.setDiscount(requestDTO.getDiscountPercentage());
-            updatedPrice.setPrice(requestDTO.getPrice());
-        }
-        else{
-            updatedPrice = currentPrice;
-        }
+        Price updatedPrice = getUpdatedPrice(requestDTO, currentProduct.getPrice());
 
         currentProduct.setCategory(updatedCategory);
         currentProduct.setPrice(updatedPrice);
 
-        if(requestDTO.getTitle() != null && !requestDTO.getTitle().isBlank() && requestDTO.getTitle().trim().length() >= 3) {
+        if(requestDTO.getTitle() != null
+                && !requestDTO.getTitle().isBlank()
+                && requestDTO.getTitle().trim().length() >= 3) {
             currentProduct.setTitle(requestDTO.getTitle());
         }
 
-        if(requestDTO.getDescription() != null && !requestDTO.getDescription().isBlank() && requestDTO.getDescription().trim().length() >= 5){
+        if(requestDTO.getDescription() != null
+                && !requestDTO.getDescription().isBlank()
+                && requestDTO.getDescription().trim().length() >= 5){
             currentProduct.setDescription(requestDTO.getDescription());
         }
 
-        if(!requestDTO.getImage().equalsIgnoreCase("placeholder.jpg") && !requestDTO.getImage().isBlank() && !requestDTO.getImage().equalsIgnoreCase(currentProduct.getImage())){
+        if(!requestDTO.getImage().equalsIgnoreCase("placeholder.jpg")
+                && !requestDTO.getImage().isBlank()
+                && !requestDTO.getImage().equalsIgnoreCase(currentProduct.getImage())){
             currentProduct.setImage(requestDTO.getImage());
         }
 
-        Product modifiedProduct;
-        try {
-            modifiedProduct = productRepository.save(currentProduct);
-        } catch (DataAccessException e) {
-            throw new ProductServiceException("Error while modifying the product!", e);
+        return saveProduct(currentProduct);
+    }
+
+    private Product fetchProduct(String id) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product with id: " + id + " could not be found!");
         }
 
-        return modifiedProduct;
+        return productOptional.get();
+    }
+
+    private static Price getUpdatedPrice(ProductRequestDTO requestDTO, Price currentPrice) {
+        Price updatedPrice;
+
+        if(!currentPrice.getCurrency().getCurrencyCode().equalsIgnoreCase(requestDTO.getCurrencyCode())
+                || currentPrice.getPrice() != requestDTO.getPrice()
+                || currentPrice.getDiscount() != requestDTO.getDiscountPercentage()
+        ){
+            updatedPrice = new Price();
+            updatedPrice.setPrice(requestDTO.getPrice());
+            updatedPrice.setCurrency(Currency.getInstance(requestDTO.getCurrencyCode().toUpperCase()));
+            updatedPrice.setDiscount(requestDTO.getDiscountPercentage());
+        }
+        else{
+            updatedPrice = currentPrice;
+        }
+        return updatedPrice;
+    }
+
+    private Category getRequestedCategory(String categoryName) {
+        Category requestedCategory;
+
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
+        if(categoryOptional.isEmpty()){
+            requestedCategory = new Category();
+            requestedCategory.setCategoryName(categoryName);
+        }
+        else{
+            requestedCategory = categoryOptional.get();
+        }
+        return requestedCategory;
+    }
+
+    private Product saveProduct(Product product) {
+        try{
+            return productRepository.save(product);
+        } catch (DataAccessException e){
+            throw new ProductServiceException("Error while saving the product!", e);
+        }
     }
 }
