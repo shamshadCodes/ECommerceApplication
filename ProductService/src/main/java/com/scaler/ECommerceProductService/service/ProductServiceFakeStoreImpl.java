@@ -61,8 +61,11 @@ public class ProductServiceFakeStoreImpl implements ProductService {
     @Override
     public Product addProduct(ProductRequestDTO productRequestDTO) {
         FakeStoreProductRequestDTO requestDTO = productRequestToFakeStoreProductRequest(productRequestDTO);
+        FakeStoreProductResponseDTO createdProduct = fakeStoreAPIClient.createProduct(requestDTO);
 
-        return fakeStoreProductToProduct(fakeStoreAPIClient.createProduct(requestDTO));
+        redisTemplate.opsForHash().put("PRODUCTS", createdProduct.getId(), createdProduct);
+
+        return fakeStoreProductToProduct(createdProduct);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class ProductServiceFakeStoreImpl implements ProductService {
         if(isNull(fakeStoreProduct)){
             throw new ProductNotFoundException("Product to be deleted not found!!!");
         }
+        redisTemplate.delete(id);
         return fakeStoreProductToProduct(fakeStoreProduct);
     }
 
@@ -80,6 +84,8 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
         FakeStoreProductResponseDTO updatedFakeStoreProduct = fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
 
+        redisTemplate.opsForHash().put("PRODUCTS", id, updatedFakeStoreProduct);
+
         return fakeStoreProductToProduct(updatedFakeStoreProduct);
     }
 
@@ -88,6 +94,9 @@ public class ProductServiceFakeStoreImpl implements ProductService {
         FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(requestDTO);
 
         FakeStoreProductResponseDTO modifiedFakeStoreProduct = fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
+
+        redisTemplate.opsForHash().put("PRODUCTS", id, modifiedFakeStoreProduct);
+
 
         return fakeStoreProductToProduct(modifiedFakeStoreProduct);
     }
