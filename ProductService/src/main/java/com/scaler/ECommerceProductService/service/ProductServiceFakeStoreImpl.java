@@ -5,25 +5,35 @@ import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
 import com.scaler.ECommerceProductService.model.Product;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.scaler.ECommerceProductService.mapper.ProductMapper.fakeStoreProductToProduct;
 import static com.scaler.ECommerceProductService.mapper.ProductMapper.productRequestToFakeStoreProductRequest;
 import static com.scaler.ECommerceProductService.utils.ProductUtils.isNull;
 
 @Service("ProductServiceFakeStoreImpl")
 public class ProductServiceFakeStoreImpl implements ProductService {
     private final FakeStoreAPIClient fakeStoreAPIClient;
+    private final RedisTemplate<String, FakeStoreProductResponseDTO> redisTemplate;
 
-    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient) {
+    public ProductServiceFakeStoreImpl(FakeStoreAPIClient fakeStoreAPIClient, RedisTemplate redisTemplate) {
         this.fakeStoreAPIClient = fakeStoreAPIClient;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public List<Product> getAllProducts() {
+        List<FakeStoreProductResponseDTO> fakeStoreProductList = fakeStoreAPIClient.getAllProducts();
+        List<Product> productList = new ArrayList<>();
 
-        return fakeStoreAPIClient.getAllProducts();
+        for(FakeStoreProductResponseDTO product: fakeStoreProductList){
+            productList.add(fakeStoreProductToProduct(product));
+        }
+        return productList;
     }
 
     @Override
@@ -33,40 +43,52 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public Product getProductById(String id) throws ProductNotFoundException {
-        Product fakeStoreProduct = fakeStoreAPIClient.getProductById(Integer.parseInt(id));
+        FakeStoreProductResponseDTO redisResponse = (FakeStoreProductResponseDTO) redisTemplate.opsForHash().get("PRODUCTS", id);
+
+        if(!isNull(redisResponse)){
+            return fakeStoreProductToProduct(redisResponse);
+        }
+
+        FakeStoreProductResponseDTO fakeStoreProduct = fakeStoreAPIClient.getProductById(Integer.parseInt(id));
         if(isNull(fakeStoreProduct)){
             throw new ProductNotFoundException("Product not found with id: " + id);
         }
-        return fakeStoreProduct;
+
+        redisTemplate.opsForHash().put("PRODUCTS", id, fakeStoreProduct);
+        return fakeStoreProductToProduct(fakeStoreProduct);
     }
 
     @Override
     public Product addProduct(ProductRequestDTO productRequestDTO) {
-        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(productRequestDTO);
+        FakeStoreProductRequestDTO requestDTO = productRequestToFakeStoreProductRequest(productRequestDTO);
 
-        return fakeStoreAPIClient.createProduct(fakeStoreProductRequestDTO);
+        return fakeStoreProductToProduct(fakeStoreAPIClient.createProduct(requestDTO));
     }
 
     @Override
     public Product deleteProduct(String id) throws ProductNotFoundException {
-        Product fakeStoreProduct = fakeStoreAPIClient.deleteProduct(Integer.parseInt(id));
+        FakeStoreProductResponseDTO fakeStoreProduct = fakeStoreAPIClient.deleteProduct(Integer.parseInt(id));
         if(isNull(fakeStoreProduct)){
             throw new ProductNotFoundException("Product to be deleted not found!!!");
         }
-        return fakeStoreProduct;
+        return fakeStoreProductToProduct(fakeStoreProduct);
     }
 
     @Override
-    public Product updateProduct(String id, ProductRequestDTO product) {
-        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(product);
+    public Product updateProduct(String id, ProductRequestDTO requestDTO) {
+        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(requestDTO);
 
-        return fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
+        FakeStoreProductResponseDTO updatedFakeStoreProduct = fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
+
+        return fakeStoreProductToProduct(updatedFakeStoreProduct);
     }
 
     @Override
-    public Product modifyProduct(String id, ProductRequestDTO product) {
-        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(product);
+    public Product modifyProduct(String id, ProductRequestDTO requestDTO) {
+        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = productRequestToFakeStoreProductRequest(requestDTO);
 
-        return fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
+        FakeStoreProductResponseDTO modifiedFakeStoreProduct = fakeStoreAPIClient.updateProduct(Integer.parseInt(id), fakeStoreProductRequestDTO);
+
+        return fakeStoreProductToProduct(modifiedFakeStoreProduct);
     }
 }

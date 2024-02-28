@@ -27,7 +27,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Autowired
-    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService) {
+    public ProductController(@Qualifier("ProductServiceFakeStoreImpl") ProductService productService) {
         this.productService = productService;
     }
 
@@ -70,7 +70,6 @@ public class ProductController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
-    //TODO: Check and fix the PUT and PATCH mappings
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequestDTO requestDTO) throws ProductNotFoundException {
         Product updatedProduct = productService.updateProduct(id, requestDTO);
