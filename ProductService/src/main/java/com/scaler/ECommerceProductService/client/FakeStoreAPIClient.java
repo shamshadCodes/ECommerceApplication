@@ -2,7 +2,6 @@ package com.scaler.ECommerceProductService.client;
 
 import com.scaler.ECommerceProductService.dto.FakeStoreProductRequestDTO;
 import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
-import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.scaler.ECommerceProductService.mapper.ProductMapper.fakeStoreProductToProduct;
-
 @Component
 public class FakeStoreAPIClient {
     private final RestTemplateBuilder restTemplateBuilder;
@@ -32,47 +29,41 @@ public class FakeStoreAPIClient {
         this.fakeStoreAPIURL = fakeStoreAPIURL;
     }
 
-    public List<Product> getAllProducts() {
+    public List<FakeStoreProductResponseDTO> getAllProducts() {
         String getAllProductsURL = fakeStoreAPIURL + fakeStoreAPIPathProduct;
         RestTemplate restTemplate = restTemplateBuilder.build();
-        List<Product> productList = new ArrayList<>();
 
         ResponseEntity<FakeStoreProductResponseDTO[]> productsResponse = restTemplate.getForEntity(getAllProductsURL, FakeStoreProductResponseDTO[].class);
         if(productsResponse.getBody() == null){
-            return productList;
+            return new ArrayList<>();
         }
 
-        List<FakeStoreProductResponseDTO> fakeStoreProductList = Arrays.stream(productsResponse.getBody()).toList();
-        for(FakeStoreProductResponseDTO fakeStoreProduct: fakeStoreProductList){
-            productList.add(fakeStoreProductToProduct(fakeStoreProduct));
-        }
-
-        return productList;
+        return Arrays.stream(productsResponse.getBody()).toList();
     }
 
-    public Product getProductById(int id){
+    public FakeStoreProductResponseDTO getProductById(int id){
         String getProductByIdURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductResponseDTO> product = restTemplate.getForEntity(getProductByIdURL, FakeStoreProductResponseDTO.class);
 
-        return fakeStoreProductToProduct(product.getBody());
+        return product.getBody();
     }
 
-    public Product createProduct(FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
+    public FakeStoreProductResponseDTO createProduct(FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
         String createProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct;
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductResponseDTO> product = restTemplate.postForEntity(createProductURL, fakeStoreProductRequestDTO, FakeStoreProductResponseDTO.class);
-        return fakeStoreProductToProduct(product.getBody());
+        return product.getBody();
     }
 
-    public Product deleteProduct(int id){
+    public FakeStoreProductResponseDTO deleteProduct(int id){
         String deleteProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         try{
             RequestEntity<Void> requestEntity = new RequestEntity<>(HttpMethod.DELETE, new URI(deleteProductURL));
             ResponseEntity<FakeStoreProductResponseDTO> deletedProduct = restTemplate.exchange(requestEntity, FakeStoreProductResponseDTO.class);
-            return fakeStoreProductToProduct(deletedProduct.getBody());
+            return deletedProduct.getBody();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -80,13 +71,13 @@ public class FakeStoreAPIClient {
         return null;
     }
 
-    public Product updateProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
+    public FakeStoreProductResponseDTO updateProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
         String updateProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
         RestTemplate restTemplate = new RestTemplate();
         try {
             RequestEntity<Void> requestEntity = new RequestEntity<>(HttpMethod.PUT, new URI(updateProductURL));
             ResponseEntity<FakeStoreProductResponseDTO> updatedProduct = restTemplate.exchange(requestEntity, FakeStoreProductResponseDTO.class);
-            return fakeStoreProductToProduct(updatedProduct.getBody());
+            return updatedProduct.getBody();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -94,13 +85,13 @@ public class FakeStoreAPIClient {
         return null;
     }
 
-    public Product modifyProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
+    public FakeStoreProductResponseDTO modifyProduct(int id, FakeStoreProductRequestDTO fakeStoreProductRequestDTO){
         String updateProductURL = fakeStoreAPIURL + fakeStoreAPIPathProduct + "/" + id;
         RestTemplate restTemplate = new RestTemplate();
         try {
             RequestEntity<Void> requestEntity = new RequestEntity<>(HttpMethod.PATCH, new URI(updateProductURL));
-            ResponseEntity<FakeStoreProductResponseDTO> updatedProduct = restTemplate.exchange(requestEntity, FakeStoreProductResponseDTO.class);
-            return fakeStoreProductToProduct(updatedProduct.getBody());
+            ResponseEntity<FakeStoreProductResponseDTO> modifiedProduct = restTemplate.exchange(requestEntity, FakeStoreProductResponseDTO.class);
+            return modifiedProduct.getBody();
         }catch (Exception e){
             e.printStackTrace();
         }
