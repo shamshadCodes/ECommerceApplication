@@ -38,7 +38,14 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategory(String category) throws ProductServiceException {
-        return null;
+        List<FakeStoreProductResponseDTO> fakeStoreProductList = fakeStoreAPIClient.getAllProductsByCategory(category);
+        List<Product> productList = new ArrayList<>();
+
+        for(FakeStoreProductResponseDTO fakeStoreProduct: fakeStoreProductList){
+            productList.add(fakeStoreProductToProduct(fakeStoreProduct));
+        }
+
+        return productList;
     }
 
     @Override

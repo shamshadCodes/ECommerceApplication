@@ -22,6 +22,8 @@ public class FakeStoreAPIClient {
     private final String fakeStoreAPIURL;
     @Value("${fakeStore.api.path.product}")
     private String fakeStoreAPIPathProduct;
+    @Value("${fakestore.api.path.category}")
+    private  String getFakeStoreAPIPathCategory;
 
     @Autowired
     public FakeStoreAPIClient (RestTemplateBuilder restTemplateBuilder, @Value("${fakeStore.api.url}") String fakeStoreAPIURL){
@@ -39,6 +41,17 @@ public class FakeStoreAPIClient {
         }
 
         return Arrays.stream(productsResponse.getBody()).toList();
+    }
+
+    public List<FakeStoreProductResponseDTO> getAllProductsByCategory(String category){
+        String getProductsByCategory = fakeStoreAPIURL + fakeStoreAPIPathProduct + getFakeStoreAPIPathCategory + "/" + category.toLowerCase();
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductResponseDTO[]> productResponse = restTemplate.getForEntity(getProductsByCategory, FakeStoreProductResponseDTO[].class);
+
+        if(productResponse.getBody() == null){
+            return new ArrayList<>();
+        }
+        return Arrays.stream(productResponse.getBody()).toList();
     }
 
     public FakeStoreProductResponseDTO getProductById(int id){

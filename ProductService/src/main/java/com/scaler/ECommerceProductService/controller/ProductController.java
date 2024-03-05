@@ -38,7 +38,7 @@ public class ProductController {
         return ResponseEntity.ok(productListResponseDTO);
     }
 
-    @GetMapping("/")
+    @GetMapping("/category")
     public ResponseEntity<ProductListResponseDTO> getProductsByCategory(@RequestParam String category) throws CategoryNotFoundException {
         List<Product> products = productService.getProductsByCategory(category);
         ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
