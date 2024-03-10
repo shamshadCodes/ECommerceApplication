@@ -8,7 +8,7 @@ import java.util.Currency;
 
 @Getter
 @Setter
-@Entity
+@Entity(name = "prices")
 public class Price extends BaseModel{
     private Currency currency;
     private double price;

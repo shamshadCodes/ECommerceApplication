@@ -13,8 +13,6 @@ import java.util.UUID;
 public class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-//    @GeneratedValue(generator = "uuidGenerator")
-//    @GenericGenerator(name="uuidGenerator", strategy = "uuid2")
     @Column(name="id", columnDefinition = "binary(16)", nullable = false, updatable = false)
     private UUID id;
 }
