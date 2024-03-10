@@ -22,7 +22,7 @@ public class FakeStoreAPIClient {
     private final String fakeStoreAPIURL;
     @Value("${fakeStore.api.path.product}")
     private String fakeStoreAPIPathProduct;
-    @Value("${fakestore.api.path.category}")
+    @Value("${fakeStore.api.path.category}")
     private  String getFakeStoreAPIPathCategory;
 
     @Autowired
