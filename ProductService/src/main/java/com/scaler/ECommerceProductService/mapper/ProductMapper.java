@@ -8,17 +8,6 @@ import com.scaler.ECommerceProductService.model.Product;
 import java.util.List;
 
 public class ProductMapper {
-    public static ProductResponseDTO fakeStoreProductResponseToProductResponse(FakeStoreProductResponseDTO fakeStoreProductResponseDTO){
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-        productResponseDTO.setId(String.valueOf(fakeStoreProductResponseDTO.getId()));
-        productResponseDTO.setTitle(fakeStoreProductResponseDTO.getTitle());
-        productResponseDTO.setPrice(fakeStoreProductResponseDTO.getPrice());
-        productResponseDTO.setCategory(fakeStoreProductResponseDTO.getCategory());
-        productResponseDTO.setImage(fakeStoreProductResponseDTO.getImage());
-        productResponseDTO.setDescription(fakeStoreProductResponseDTO.getDescription());
-
-        return productResponseDTO;
-    }
 
     public static FakeStoreProductRequestDTO productRequestToFakeStoreProductRequest(ProductRequestDTO productRequestDTO){
         FakeStoreProductRequestDTO fakeStoreProductRequestDTO = new FakeStoreProductRequestDTO();
@@ -40,7 +29,7 @@ public class ProductMapper {
 
         category.setCategoryName(fakeStoreProduct.getCategory());
 
-        product.setId(String.valueOf(fakeStoreProduct.getId()));
+//        product.setId(String.valueOf(fakeStoreProduct.getId()));
         product.setTitle(fakeStoreProduct.getTitle());
         product.setImage(fakeStoreProduct.getImage());
         product.setDescription(fakeStoreProduct.getDescription());
