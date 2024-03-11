@@ -60,4 +60,16 @@ public class ProductMapper {
 
         return productListResponseDTO;
     }
+
+    public static ProductRequestDTO fakeStoreProductToProductRequestDTO(FakeStoreProductResponseDTO fakeStoreProduct){
+        ProductRequestDTO requestDTO = new ProductRequestDTO();
+        requestDTO.setTitle(fakeStoreProduct.getTitle());
+        requestDTO.setDescription(fakeStoreProduct.getDescription());
+        requestDTO.setImage(fakeStoreProduct.getImage());
+        requestDTO.setPrice(fakeStoreProduct.getPrice());
+        requestDTO.setCategory(fakeStoreProduct.getCategory());
+
+        return requestDTO;
+    }
+
 }

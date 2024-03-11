@@ -7,6 +7,7 @@ import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.model.Product;
+import com.scaler.ECommerceProductService.service.InitService;
 import com.scaler.ECommerceProductService.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -25,15 +26,25 @@ import static com.scaler.ECommerceProductService.mapper.ProductMapper.productToP
 public class ProductController {
 
     private final ProductService productService;
+    private final InitService initService;
 
     @Autowired
-    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService) {
+    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService, InitService initService) {
         this.productService = productService;
+        this.initService = initService;
     }
 
     @GetMapping
     public ResponseEntity<ProductListResponseDTO> getAllProducts() {
         List<Product> products = productService.getAllProducts();
+        ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
+        return ResponseEntity.ok(productListResponseDTO);
+    }
+
+    // API only used to copy some sample products from FakeStore to enable usage of other APIs
+    @GetMapping("/fakestore")
+    public ResponseEntity<ProductListResponseDTO> copyProductsFromFakeStore() throws ProductAlreadyExistsException {
+        List<Product> products = initService.copyProductsFromFakeStore();
         ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
         return ResponseEntity.ok(productListResponseDTO);
     }
