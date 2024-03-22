@@ -4,6 +4,7 @@ import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
 import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
+import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,11 @@ public class ProductServiceFakeStoreImpl implements ProductService {
             productList.add(fakeStoreProductToProduct(product));
         }
         return productList;
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return null;
     }
 
     @Override

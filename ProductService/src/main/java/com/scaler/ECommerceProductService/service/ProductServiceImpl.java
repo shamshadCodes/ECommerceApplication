@@ -38,8 +38,33 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public List<Category> getAllCategories() {
+        try{
+            return categoryRepository.findAll();
+        }
+        catch (DataAccessException e){
+            throw new ProductServiceException("Error retrieving products", e);
+        }
+    }
+
     public Product getProductById(String id) throws ProductNotFoundException {
         return fetchProduct(id);
+    }
+
+    public List<Product> getProductsByCategory(String categoryName) throws CategoryNotFoundException {
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
+        if(categoryOptional.isEmpty()){
+            throw new CategoryNotFoundException("Category: " + categoryName + " could not be found!");
+        }
+
+        try {
+            return productRepository.findAllByCategory(categoryOptional.get());
+        }
+        catch (DataAccessException e){
+            throw new ProductServiceException("Error retrieving products", e);
+        }
+
     }
 
     @Override
@@ -143,21 +168,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return saveProduct(currentProduct);
-    }
-
-    public List<Product> getProductsByCategory(String categoryName) throws CategoryNotFoundException {
-        Optional<Category> categoryOptional = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
-        if(categoryOptional.isEmpty()){
-            throw new CategoryNotFoundException("Category: " + categoryName + " could not be found!");
-        }
-
-        try {
-            return productRepository.findAllByCategory(categoryOptional.get());
-        }
-        catch (DataAccessException e){
-            throw new ProductServiceException("Error retrieving products", e);
-        }
-
     }
 
     private Product fetchProduct(String id) throws ProductNotFoundException {
