@@ -1,11 +1,11 @@
 package com.scaler.ECommerceProductService.controller;
 
-import com.scaler.ECommerceProductService.dto.ProductListResponseDTO;
-import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
-import com.scaler.ECommerceProductService.dto.ProductResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
+import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Product;
 import com.scaler.ECommerceProductService.service.InitService;
 import com.scaler.ECommerceProductService.service.ProductService;
@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.scaler.ECommerceProductService.mapper.CategoryMapper.categoryListToCategoryListResponseDTO;
 import static com.scaler.ECommerceProductService.mapper.ProductMapper.productListToProductListResponseDTO;
 import static com.scaler.ECommerceProductService.mapper.ProductMapper.productToProductResponseDTO;
 
@@ -27,11 +29,13 @@ public class ProductController {
 
     private final ProductService productService;
     private final InitService initService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService, InitService initService) {
+    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService, InitService initService, ObjectMapper objectMapper) {
         this.productService = productService;
         this.initService = initService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -41,16 +45,15 @@ public class ProductController {
         return ResponseEntity.ok(productListResponseDTO);
     }
 
-    // API only used to copy some sample products from FakeStore to enable usage of other APIs
-    @GetMapping("/fakestore")
-    public ResponseEntity<ProductListResponseDTO> copyProductsFromFakeStore() throws ProductAlreadyExistsException {
-        List<Product> products = initService.copyProductsFromFakeStore();
-        ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
-        return ResponseEntity.ok(productListResponseDTO);
+    @GetMapping("/category")
+    public ResponseEntity<CategoryListResponseDTO> getAllCategories(){
+        List<Category> categories = productService.getAllCategories();
+
+        return ResponseEntity.ok(categoryListToCategoryListResponseDTO(categories));
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<ProductListResponseDTO> getProductsByCategory(@RequestParam String category) throws CategoryNotFoundException {
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ProductListResponseDTO> getProductsByCategory(@PathVariable String category) throws CategoryNotFoundException {
         List<Product> products = productService.getProductsByCategory(category);
         ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
         return ResponseEntity.ok(productListResponseDTO);
@@ -95,6 +98,14 @@ public class ProductController {
         ProductResponseDTO productResponseDTO = productToProductResponseDTO(modifiedProduct);
 
         return ResponseEntity.ok(productResponseDTO);
+    }
+
+    // API only used to copy some sample products from FakeStore to enable usage of other APIs
+    @GetMapping("/fakestore")
+    public ResponseEntity<ProductListResponseDTO> copyProductsFromFakeStore() throws ProductAlreadyExistsException {
+        List<Product> products = initService.copyProductsFromFakeStore();
+        ProductListResponseDTO productListResponseDTO = productListToProductListResponseDTO(products);
+        return ResponseEntity.ok(productListResponseDTO);
     }
 }
 
