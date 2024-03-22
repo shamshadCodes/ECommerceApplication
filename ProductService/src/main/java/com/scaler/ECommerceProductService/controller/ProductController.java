@@ -1,6 +1,5 @@
 package com.scaler.ECommerceProductService.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scaler.ECommerceProductService.dto.*;
 import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.scaler.ECommerceProductService.mapper.CategoryMapper.categoryListToCategoryListResponseDTO;
@@ -29,13 +27,11 @@ public class ProductController {
 
     private final ProductService productService;
     private final InitService initService;
-    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService, InitService initService, ObjectMapper objectMapper) {
+    public ProductController(@Qualifier("ProductServiceImpl") ProductService productService, InitService initService) {
         this.productService = productService;
         this.initService = initService;
-        this.objectMapper = objectMapper;
     }
 
     @GetMapping

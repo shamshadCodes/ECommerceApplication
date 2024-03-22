@@ -4,7 +4,6 @@ import com.scaler.ECommerceProductService.dto.CategoryListResponseDTO;
 import com.scaler.ECommerceProductService.dto.CategoryResponseDTO;
 import com.scaler.ECommerceProductService.model.Category;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryMapper {
