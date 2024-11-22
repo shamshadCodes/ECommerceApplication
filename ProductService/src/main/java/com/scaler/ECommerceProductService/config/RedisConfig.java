@@ -18,12 +18,16 @@ public class RedisConfig {
     @Value("${spring.data.redis.password}")
     private String password;
 
+    @Value("${spring.data.redis.username}")
+    private String username;
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(port);
         redisStandaloneConfiguration.setPassword(password);
+        redisStandaloneConfiguration.setUsername(username);
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 

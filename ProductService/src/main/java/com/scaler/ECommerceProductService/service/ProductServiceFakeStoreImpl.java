@@ -39,7 +39,16 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public List<Category> getAllCategories() {
-        return null;
+        List<String> categories = fakeStoreAPIClient.getAllCategories();
+
+        List<Category> categoryList = new ArrayList<>();
+        for(String category: categories){
+            Category categoryObj = new Category();
+            categoryObj.setCategoryName(category);
+            categoryList.add(categoryObj);
+        }
+
+        return categoryList;
     }
 
     @Override

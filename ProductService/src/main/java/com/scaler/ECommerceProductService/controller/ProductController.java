@@ -41,7 +41,7 @@ public class ProductController {
         return ResponseEntity.ok(productListResponseDTO);
     }
 
-    @GetMapping("/category")
+    @GetMapping("/categories")
     public ResponseEntity<CategoryListResponseDTO> getAllCategories(){
         List<Category> categories = productService.getAllCategories();
 

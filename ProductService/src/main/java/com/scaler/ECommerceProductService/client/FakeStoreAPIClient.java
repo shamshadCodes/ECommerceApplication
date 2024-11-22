@@ -43,6 +43,17 @@ public class FakeStoreAPIClient {
         return Arrays.stream(productsResponse.getBody()).toList();
     }
 
+    public List<String> getAllCategories(){
+        String fakeStoreAPIURL = this.fakeStoreAPIURL + fakeStoreAPIPathProduct + "/categories";
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<String[]> categoriesResponse = restTemplate.getForEntity(fakeStoreAPIURL, String[].class);
+
+        if(categoriesResponse.getBody() == null){
+            return new ArrayList<>();
+        }
+        return Arrays.stream(categoriesResponse.getBody()).toList();
+    }
+
     public List<FakeStoreProductResponseDTO> getAllProductsByCategory(String category){
         String getProductsByCategory = fakeStoreAPIURL + fakeStoreAPIPathProduct + getFakeStoreAPIPathCategory + "/" + category.toLowerCase();
         RestTemplate restTemplate = restTemplateBuilder.build();
