@@ -41,7 +41,7 @@ public class AuthService {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(hashedPassword);
+        user.setHashedPassword(hashedPassword);
 
         User savedUser = userRepository.save(user);
 
@@ -57,7 +57,7 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        if(!bCryptPasswordEncoder.matches(password, user.getPassword())){
+        if(!bCryptPasswordEncoder.matches(password, user.getHashedPassword())){
             throw new InvalidLoginCredentialsException("Invalid Credentials");
         }
 

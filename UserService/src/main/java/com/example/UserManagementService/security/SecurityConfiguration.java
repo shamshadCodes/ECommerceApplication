@@ -12,18 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -36,12 +28,12 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+public class SecurityConfiguration {
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//
+//    public SecurityConfiguration(BCryptPasswordEncoder bCryptPasswordEncoder) {
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
 
     @Bean
     @Order(1)
@@ -64,38 +56,48 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
-                )
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
+//    @Bean
+//    @Order(3)
+//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+//        System.out.println("=== REGISTERING ORDER(3) SECURITY CHAIN ===");
+//        http
+//                .securityMatcher(request -> {
+//                    String uri = request.getRequestURI();
+//                    boolean isAuthPath = uri.startsWith("/auth");
+//                    boolean isUsersPath = uri.startsWith("/users");
+//                    System.out.println("Order(3) - URI: " + uri + ", isAuth: " + isAuthPath + ", isUsers: " + isUsersPath);
+//                    return !isAuthPath && !isUsersPath;
+//                })
+//                .authorizeHttpRequests((authorize) ->
+//                        authorize.anyRequest().authenticated())
+//                // Form login handles the redirect to the login page from the
+//                // authorization server filter chain
+//                .formLogin(Customizer.withDefaults());
+//
+//        return http.build();
+//    }
 
-        return http.build();
-    }
 
-    @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("productservice")
-                .clientSecret(bCryptPasswordEncoder.encode("passwordofproductserviceclient")) // this password can be anything
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE) // Different than Bearer
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS) // Different than Password?
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
-                .redirectUri("https://oauth.pstmn.io/v1/callback")
-                .postLogoutRedirectUri("http://127.0.0.1:8080/")
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .build();
 
-        return new InMemoryRegisteredClientRepository(oidcClient);
-    }
+//    @Bean
+//    public RegisteredClientRepository registeredClientRepository() {
+//        RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("productservice")
+//                .clientSecret(bCryptPasswordEncoder.encode("passwordofproductserviceclient")) // this password can be anything
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE) // Different than Bearer
+//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS) // Different than Password?
+//                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+//                .redirectUri("https://oauth.pstmn.io/v1/callback")
+//                .postLogoutRedirectUri("http://127.0.0.1:8080/")
+//                .scope(OidcScopes.OPENID)
+//                .scope(OidcScopes.PROFILE)
+//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+//                .build();
+//
+//        return new InMemoryRegisteredClientRepository(oidcClient);
+//    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
