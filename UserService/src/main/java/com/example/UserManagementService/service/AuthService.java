@@ -48,7 +48,7 @@ public class AuthService {
         return new UserDTO(savedUser);
     }
 
-    public ResponseEntity<UserDTO> loginUser(String email, String password) {
+    public ResponseEntity<SessionDTO> loginUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if(userOptional.isEmpty()){
@@ -97,7 +97,7 @@ public class AuthService {
         MultiValueMapAdapter<String, String> headers = new MultiValueMapAdapter<>(new HashMap<>());
         headers.add(HttpHeaders.SET_COOKIE, token);
 
-        return new ResponseEntity<>(new UserDTO(user), headers, HttpStatus.OK);
+        return new ResponseEntity<>(new SessionDTO(session), headers, HttpStatus.OK);
     }
 
     public void logoutUser(UUID userID, String token) {

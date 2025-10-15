@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<SessionDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
         return authService.loginUser(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
     }
 

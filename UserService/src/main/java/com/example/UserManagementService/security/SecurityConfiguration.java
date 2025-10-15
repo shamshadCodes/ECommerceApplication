@@ -56,26 +56,20 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-//    @Bean
-//    @Order(3)
-//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-//        System.out.println("=== REGISTERING ORDER(3) SECURITY CHAIN ===");
-//        http
-//                .securityMatcher(request -> {
-//                    String uri = request.getRequestURI();
-//                    boolean isAuthPath = uri.startsWith("/auth");
-//                    boolean isUsersPath = uri.startsWith("/users");
-//                    System.out.println("Order(3) - URI: " + uri + ", isAuth: " + isAuthPath + ", isUsers: " + isUsersPath);
-//                    return !isAuthPath && !isUsersPath;
-//                })
-//                .authorizeHttpRequests((authorize) ->
-//                        authorize.anyRequest().authenticated())
-//                // Form login handles the redirect to the login page from the
-//                // authorization server filter chain
-//                .formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//    }
+    @Bean
+    @Order(3)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("=== REGISTERING ORDER(3) SECURITY CHAIN ===");
+        http
+                .securityMatcher(request -> !request.getRequestURI().startsWith("/auth"))
+                .authorizeHttpRequests((authorize) ->
+                        authorize.anyRequest().authenticated())
+                // Form login handles the redirect to the login page from the
+                // authorization server filter chain
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
 
 
 
