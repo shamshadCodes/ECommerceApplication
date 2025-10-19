@@ -1,12 +1,15 @@
 package com.scaler.ECommerceProductService.service;
 
-import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductSearchRequest;
 import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
 import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,4 +29,6 @@ public interface ProductService {
     Product updateProduct(String id, ProductRequestDTO product) throws ProductNotFoundException;
 
     Product modifyProduct(String id, ProductRequestDTO product) throws ProductNotFoundException;
+
+    Page<Product> searchProducts(ProductSearchRequest query, Pageable pageable);
 }

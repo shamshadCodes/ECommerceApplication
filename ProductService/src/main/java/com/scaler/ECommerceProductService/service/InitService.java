@@ -1,8 +1,8 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
-import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
-import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Response.FakeStoreProductResponseDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductRequestDTO;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.model.Product;
 import jakarta.transaction.Transactional;

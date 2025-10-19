@@ -1,6 +1,6 @@
 package com.scaler.ECommerceProductService.controller.ControllerAdvice;
 
-import com.scaler.ECommerceProductService.dto.ErrorResponseDTO;
+import com.scaler.ECommerceProductService.dto.Response.ErrorResponseDTO;
 import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;

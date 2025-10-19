@@ -1,15 +1,11 @@
-package com.scaler.ECommerceProductService.dto;
-
+package com.scaler.ECommerceProductService.dto.Request;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
-public class ProductResponseDTO {
-    private UUID id;
+public class FakeStoreProductRequestDTO {
     private String title;
     private String description;
     private String category;

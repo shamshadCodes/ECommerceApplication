@@ -1,4 +1,4 @@
-package com.scaler.ECommerceProductService.dto;
+package com.scaler.ECommerceProductService.dto.Request;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.scaler.ECommerceProductService.dto;
+package com.scaler.ECommerceProductService.dto.Response;
 
 import lombok.Getter;
 

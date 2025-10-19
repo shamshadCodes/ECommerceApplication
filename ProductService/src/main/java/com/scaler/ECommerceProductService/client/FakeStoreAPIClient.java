@@ -1,7 +1,7 @@
 package com.scaler.ECommerceProductService.client;
 
-import com.scaler.ECommerceProductService.dto.FakeStoreProductRequestDTO;
-import com.scaler.ECommerceProductService.dto.FakeStoreProductResponseDTO;
+import com.scaler.ECommerceProductService.dto.Request.FakeStoreProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Response.FakeStoreProductResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

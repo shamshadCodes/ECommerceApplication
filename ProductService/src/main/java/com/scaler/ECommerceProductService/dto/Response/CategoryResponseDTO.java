@@ -1,4 +1,4 @@
-package com.scaler.ECommerceProductService.dto;
+package com.scaler.ECommerceProductService.dto.Response;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -2,7 +2,8 @@ package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.Repository.CategoryRepository;
 import com.scaler.ECommerceProductService.Repository.ProductRepository;
-import com.scaler.ECommerceProductService.dto.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductSearchRequest;
 import com.scaler.ECommerceProductService.exception.CategoryNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductAlreadyExistsException;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
@@ -11,6 +12,8 @@ import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Price;
 import com.scaler.ECommerceProductService.model.Product;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Currency;
@@ -218,5 +221,11 @@ public class ProductServiceImpl implements ProductService {
         } catch (DataAccessException e){
             throw new ProductServiceException("Error while saving the product!", e);
         }
+    }
+
+    @Override
+    public Page<Product> searchProducts(ProductSearchRequest query, Pageable pageable) {
+
+
     }
 }

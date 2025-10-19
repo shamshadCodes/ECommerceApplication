@@ -1,11 +1,16 @@
 package com.scaler.ECommerceProductService.service;
 
 import com.scaler.ECommerceProductService.client.FakeStoreAPIClient;
-import com.scaler.ECommerceProductService.dto.*;
+import com.scaler.ECommerceProductService.dto.Request.FakeStoreProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductSearchRequest;
+import com.scaler.ECommerceProductService.dto.Response.FakeStoreProductResponseDTO;
 import com.scaler.ECommerceProductService.exception.ProductNotFoundException;
 import com.scaler.ECommerceProductService.exception.ProductServiceException;
 import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -121,5 +126,10 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
 
         return fakeStoreProductToProduct(modifiedFakeStoreProduct);
+    }
+
+    @Override
+    public Page<Product> searchProducts(ProductSearchRequest query, Pageable pageable) {
+        return null;
     }
 }

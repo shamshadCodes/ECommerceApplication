@@ -1,9 +1,14 @@
 package com.scaler.ECommerceProductService.mapper;
 
-import com.scaler.ECommerceProductService.dto.*;
+import com.scaler.ECommerceProductService.dto.Request.FakeStoreProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Request.ProductRequestDTO;
+import com.scaler.ECommerceProductService.dto.Response.FakeStoreProductResponseDTO;
+import com.scaler.ECommerceProductService.dto.Response.ProductListResponseDTO;
+import com.scaler.ECommerceProductService.dto.Response.ProductResponseDTO;
 import com.scaler.ECommerceProductService.model.Category;
 import com.scaler.ECommerceProductService.model.Price;
 import com.scaler.ECommerceProductService.model.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -39,7 +44,7 @@ public class ProductMapper {
         return product;
     }
 
-    public static  ProductResponseDTO productToProductResponseDTO(Product product){
+    public static ProductResponseDTO productToProductResponseDTO(Product product){
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
         productResponseDTO.setId(product.getId());
         productResponseDTO.setTitle(product.getTitle());
@@ -57,6 +62,21 @@ public class ProductMapper {
             productListResponseDTO.getProductList()
                     .add(productToProductResponseDTO(product));
         }
+
+        return productListResponseDTO;
+    }
+
+    public static ProductListResponseDTO productListToProductListResponseDTO(Page<Product> productPage){
+        ProductListResponseDTO productListResponseDTO = new ProductListResponseDTO();
+        for(Product product: productPage.getContent()){
+            productListResponseDTO.getProductList()
+                    .add(productToProductResponseDTO(product));
+        }
+
+        productListResponseDTO.setTotalProducts(productPage.getTotalElements());
+        productListResponseDTO.setTotalPages(productPage.getTotalPages());
+        productListResponseDTO.setPageSize(productPage.getSize());
+        productListResponseDTO.setPageNumber(productPage.getNumber());
 
         return productListResponseDTO;
     }
