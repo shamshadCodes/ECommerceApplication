@@ -6,6 +6,8 @@ import com.example.UserManagementService.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/roles")
 public class RoleController {
@@ -18,6 +20,12 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<Role> createRole(@RequestBody CreateRoleRequestDTO roleRequestDTO){
         Role role = roleService.createRole(roleRequestDTO.getName());
+        return ResponseEntity.ok(role);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Role>> fetchAllRoles(){
+        List<Role> role = roleService.getAllRoles();
         return ResponseEntity.ok(role);
     }
 

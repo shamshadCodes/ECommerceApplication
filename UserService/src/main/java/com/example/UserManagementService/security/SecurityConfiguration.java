@@ -29,11 +29,6 @@ import java.util.UUID;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//
-//    public SecurityConfiguration(BCryptPasswordEncoder bCryptPasswordEncoder) {
-//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//    }
 
     @Bean
     @Order(1)
@@ -70,8 +65,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-
 
 //    @Bean
 //    public RegisteredClientRepository registeredClientRepository() {

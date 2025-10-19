@@ -46,4 +46,8 @@ public class UserService {
         return new UserDTO(user);
 
     }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
 }

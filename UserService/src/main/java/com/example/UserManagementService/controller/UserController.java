@@ -2,10 +2,12 @@ package com.example.UserManagementService.controller;
 
 import com.example.UserManagementService.dto.SetUserRolesRequestDTO;
 import com.example.UserManagementService.dto.UserDTO;
+import com.example.UserManagementService.model.User;
 import com.example.UserManagementService.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,5 +29,11 @@ public class UserController {
     public ResponseEntity<UserDTO> setRoles(@PathVariable("id") UUID userId, @RequestBody SetUserRolesRequestDTO request){
         UserDTO userDTO = userService.setUserRoles(userId, request.getRoleIds());
         return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> fetchAllUsers(){
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 }
