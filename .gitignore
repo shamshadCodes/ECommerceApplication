@@ -48,3 +48,6 @@ application-dev.properties
 *_backup/
 Projects_backup/
 *_remotes.txt
+
+# Documentation (local only)
+docs/
