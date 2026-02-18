@@ -51,3 +51,6 @@ Projects_backup/
 
 # Documentation (local only)
 docs/
+
+# Docker
+docker/mysql/data/

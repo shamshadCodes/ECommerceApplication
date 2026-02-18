@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # MySQL Database for all services
+  mysql:
+    image: mysql:8.0
+    container_name: ecommerce-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - ecommerce-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # Redis (optional - ProductService uses cloud Redis, but this is for local dev)
+  redis:
+    image: redis:7-alpine
+    container_name: ecommerce-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # UserService
+  user-service:
+    build:
+      context: ./UserService
+      dockerfile: ../docker/Dockerfile.user-service
+    container_name: user-service
+    ports:
+      - "8071:8071"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user_db
+      SPRING_DATASOURCE_USERNAME: userDbUser
+      SPRING_DATASOURCE_PASSWORD: password
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 512M
+    restart: always
+
+  # ProductService
+  product-service:
+     build:
+       context: ./ProductService
+       dockerfile: ../docker/Dockerfile.product-service
+     container_name: product-service
+     ports:
+       - "8072:8072"
+     environment:
+       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/catalog_db
+       SPRING_DATASOURCE_USERNAME: product_user
+       SPRING_DATASOURCE_PASSWORD: password
+       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://user-service:8071
+       JAVA_OPTS: "-Xmx512m -Xms256m"
+     depends_on:
+       mysql:
+         condition: service_healthy
+       user-service:
+         condition: service_started
+     networks:
+       - ecommerce-network
+     deploy:
+       resources:
+         limits:
+           memory: 768M
+         reservations:
+           memory: 512M
+     restart: always
+
+  # InventoryService
+  inventory-service:
+    build:
+      context: ./InventoryService
+      dockerfile: ../docker/Dockerfile.inventory-service
+    container_name: inventory-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/inventoryService
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 512M
+    restart: always
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
