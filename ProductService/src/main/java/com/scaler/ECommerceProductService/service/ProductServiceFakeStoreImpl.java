@@ -130,6 +130,6 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     @Override
     public Page<Product> searchProducts(ProductSearchRequest query, Pageable pageable) {
-        return null;
+        return Page.empty(pageable);
     }
 }

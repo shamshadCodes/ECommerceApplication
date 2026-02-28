@@ -225,7 +225,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> searchProducts(ProductSearchRequest query, Pageable pageable) {
-
-
+        try {
+            return productRepository.searchProducts(
+                    query.getName(),
+                    query.getCategory(),
+                    query.getMinPrice() > 0 ? query.getMinPrice() : null,
+                    query.getMaxPrice() > 0 ? query.getMaxPrice() : null,
+                    pageable
+            );
+        } catch (DataAccessException e) {
+            throw new ProductServiceException("Error while searching products", e);
+        }
     }
 }

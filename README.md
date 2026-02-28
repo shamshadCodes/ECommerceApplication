@@ -49,6 +49,7 @@ ecommerce-backend/
 ├── OrderService/           # Order processing and management (Port 8083) ⭐ NEW
 ├── CartService/            # Shopping cart and checkout (Port 8084) ⭐ NEW
 ├── APIGateway/             # API Gateway for routing (Port 8080) ⭐ NEW
+├── docker-compose.yml      # Docker Compose configuration for all services
 ├── docs/                   # Documentation
 │   ├── IMPLEMENTATION_PLAN.md
 │   ├── QUICK_START_GUIDE.md
@@ -103,11 +104,71 @@ ecommerce-backend/
 ## 🛠️ Quick Start
 
 ### Prerequisites
-- Java 17 or higher
-- Maven 3.6+
-- MySQL 8.0+
+- **Docker & Docker Compose** (Recommended) - For containerized deployment
+- **OR** Java 17 or higher + Maven 3.6+ + MySQL 8.0+ (For local development)
 
-### Database Setup
+### Option 1: Docker Compose (Recommended) 🐳
+
+The easiest way to run the entire e-commerce platform is using Docker Compose. This will start all services, MySQL, and Redis with proper networking and health checks.
+
+#### Start All Services
+```bash
+docker-compose up
+```
+
+This single command will:
+- Start MySQL database with health checks
+- Start Redis cache
+- Start all 6 microservices (UserService, ProductService, InventoryService, OrderService, CartService, APIGateway)
+- Configure proper service dependencies and inter-service communication
+- Set up memory limits to prevent OOM issues
+- Enable automatic restarts
+
+#### Stop All Services
+```bash
+docker-compose down
+```
+
+#### View Service Status
+```bash
+docker-compose ps
+```
+
+#### View Service Logs
+```bash
+# All services
+docker-compose logs -f
+
+# Specific service
+docker-compose logs -f user-service
+docker-compose logs -f product-service
+docker-compose logs -f inventory-service
+```
+
+#### Service Endpoints (Docker)
+- **APIGateway**: http://localhost:8080 (Single entry point for all services)
+- **UserService**: http://localhost:8071
+- **ProductService**: http://localhost:8072
+- **InventoryService**: http://localhost:8081
+- **OrderService**: http://localhost:8083
+- **CartService**: http://localhost:8084
+- **MySQL**: localhost:3306
+- **Redis**: localhost:6379
+
+#### Docker Configuration Highlights
+
+The `docker-compose.yml` includes:
+- **Memory Management**: Prevents OOM kills with configured limits
+  - MySQL: 1GB limit, 512MB reservation
+  - Services: 768MB limit, 512MB reservation
+- **Health Checks**: MySQL health check with 60s startup grace period
+- **Service Dependencies**: Services wait for MySQL to be healthy before starting
+- **Automatic Restarts**: All services restart automatically on failure
+- **Persistent Storage**: MySQL data persisted in Docker volumes
+
+### Option 2: Manual Setup (Local Development)
+
+#### Database Setup
 ```sql
 CREATE DATABASE user_management_db;
 CREATE DATABASE catalog_db;
@@ -116,9 +177,9 @@ CREATE DATABASE order_db;
 CREATE DATABASE cart_db;
 ```
 
-### Running Services
+#### Running Services
 
-**Option 1: Through API Gateway (Recommended)**
+**Through API Gateway (Recommended)**
 
 Start all services in this order:
 ```bash
@@ -137,7 +198,7 @@ cd APIGateway && ./mvnw spring-boot:run
 
 Access all services through: `http://localhost:8080/api/`
 
-**Option 2: Direct Service Access**
+**Direct Service Access**
 ```bash
 # UserService
 cd UserService && ./mvnw spring-boot:run
@@ -262,20 +323,60 @@ All communication uses **RestTemplate** for synchronous REST calls.
 
 ## 🔧 Troubleshooting
 
-### Services won't start
+### Docker Compose Issues
+
+#### MySQL Container Keeps Restarting
+- **Symptom**: MySQL container exits with code 137
+- **Cause**: Out of Memory (OOM) killer
+- **Solution**: Memory limits are already configured in docker-compose.yml (1GB for MySQL)
+- **Check**: `docker logs ecommerce-mysql` to verify
+
+#### Services Can't Connect to MySQL
+- **Symptom**: `Communications link failure` or `UnknownHostException: mysql`
+- **Cause**: Services started before MySQL was ready, or services started separately
+- **Solution**:
+  1. Stop all containers: `docker-compose down`
+  2. Start all together: `docker-compose up`
+  3. Wait for MySQL health check to pass (60 seconds)
+
+#### Restart Policy Not Working
+- **Symptom**: Containers don't restart after failure
+- **Cause**: OOM kills are system-level, not application failures
+- **Solution**: Using `restart: always` policy (already configured)
+
+#### Port Already in Use
+- **Symptom**: `Bind for 0.0.0.0:8071 failed: port is already allocated`
+- **Solution**:
+  ```bash
+  # Find process using the port
+  lsof -i :8071
+  # Kill the process or stop conflicting containers
+  docker-compose down
+  ```
+
+### Local Development Issues
+
+#### Services won't start
 - Check if ports are already in use
 - Verify MySQL is running
 - Check database credentials in application.properties
 
-### Inter-service communication fails
+#### Inter-service communication fails
 - Ensure all dependent services are running
 - Check service URLs in application.properties
 - Verify network connectivity
 
-### Database connection errors
+#### Database connection errors
 - Verify databases exist
 - Check MySQL credentials
 - Ensure MySQL is running on port 3306
+
+### General Tips
+
+- **Check Service Health**: `curl http://localhost:8071/actuator/health`
+- **View Docker Logs**: `docker-compose logs -f [service-name]`
+- **Restart Single Service**: `docker-compose restart [service-name]`
+- **Rebuild Containers**: `docker-compose up --build`
 
 See [Quick Start Guide](docs/QUICK_START_GUIDE.md) for more troubleshooting tips.
 
@@ -289,6 +390,7 @@ Developed for academic purposes as part of an MS in Computer Science degree prog
 
 ---
 
-**Last Updated**: February 18, 2026
+**Last Updated**: February 19, 2026
 **Project Status**: 80% Complete (4/5 Phases)
 **Total Services**: 6 Microservices + 1 API Gateway
+**Deployment**: Docker Compose with health checks and memory management
