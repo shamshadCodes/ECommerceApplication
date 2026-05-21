@@ -46,9 +46,9 @@ ecommerce-backend/
 ├── UserService/            # User authentication and management (Port 8071)
 ├── ProductService/         # Product catalog and management (Port 8072)
 ├── InventoryService/       # Inventory and stock management (Port 8081)
-├── OrderService/           # Order processing and management (Port 8083) ⭐ NEW
-├── CartService/            # Shopping cart and checkout (Port 8084) ⭐ NEW
-├── APIGateway/             # API Gateway for routing (Port 8080) ⭐ NEW
+├── OrderService/           # Order processing and management (Port 8083) 
+├── CartService/            # Shopping cart and checkout (Port 8084) 
+├── APIGateway/             # API Gateway for routing (Port 8080) 
 ├── docker-compose.yml      # Docker Compose configuration for all services
 ├── docs/                   # Documentation
 │   ├── IMPLEMENTATION_PLAN.md
@@ -321,65 +321,6 @@ All communication uses **RestTemplate** for synchronous REST calls.
 - [ ] Caching layer (Redis)
 - [ ] Message queue (RabbitMQ, Kafka)
 
-## 🔧 Troubleshooting
-
-### Docker Compose Issues
-
-#### MySQL Container Keeps Restarting
-- **Symptom**: MySQL container exits with code 137
-- **Cause**: Out of Memory (OOM) killer
-- **Solution**: Memory limits are already configured in docker-compose.yml (1GB for MySQL)
-- **Check**: `docker logs ecommerce-mysql` to verify
-
-#### Services Can't Connect to MySQL
-- **Symptom**: `Communications link failure` or `UnknownHostException: mysql`
-- **Cause**: Services started before MySQL was ready, or services started separately
-- **Solution**:
-  1. Stop all containers: `docker-compose down`
-  2. Start all together: `docker-compose up`
-  3. Wait for MySQL health check to pass (60 seconds)
-
-#### Restart Policy Not Working
-- **Symptom**: Containers don't restart after failure
-- **Cause**: OOM kills are system-level, not application failures
-- **Solution**: Using `restart: always` policy (already configured)
-
-#### Port Already in Use
-- **Symptom**: `Bind for 0.0.0.0:8071 failed: port is already allocated`
-- **Solution**:
-  ```bash
-  # Find process using the port
-  lsof -i :8071
-  # Kill the process or stop conflicting containers
-  docker-compose down
-  ```
-
-### Local Development Issues
-
-#### Services won't start
-- Check if ports are already in use
-- Verify MySQL is running
-- Check database credentials in application.properties
-
-#### Inter-service communication fails
-- Ensure all dependent services are running
-- Check service URLs in application.properties
-- Verify network connectivity
-
-#### Database connection errors
-- Verify databases exist
-- Check MySQL credentials
-- Ensure MySQL is running on port 3306
-
-### General Tips
-
-- **Check Service Health**: `curl http://localhost:8071/actuator/health`
-- **View Docker Logs**: `docker-compose logs -f [service-name]`
-- **Restart Single Service**: `docker-compose restart [service-name]`
-- **Rebuild Containers**: `docker-compose up --build`
-
-See [Quick Start Guide](docs/QUICK_START_GUIDE.md) for more troubleshooting tips.
-
 ## 👨‍💻 Author
 
 **Shamshad Khan** - [@shamshadCodes](https://github.com/shamshadCodes)
@@ -391,6 +332,5 @@ Developed for academic purposes as part of an MS in Computer Science degree prog
 ---
 
 **Last Updated**: February 19, 2026
-**Project Status**: 80% Complete (4/5 Phases)
 **Total Services**: 6 Microservices + 1 API Gateway
 **Deployment**: Docker Compose with health checks and memory management
