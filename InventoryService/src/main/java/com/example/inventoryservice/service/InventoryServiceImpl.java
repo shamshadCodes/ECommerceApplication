@@ -190,7 +190,17 @@ public class InventoryServiceImpl implements InventoryService {
     public long getTotalItemCount() {
         return jpaInventoryRepository.count();
     }
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<InventoryItemDto> searchItems(String keyword) {
+        log.info("Searching inventory items with keyword: {}", keyword);
+
+        return jpaInventoryRepository.searchByNameOrDescription(keyword).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     private InventoryItemDto mapToDto(InventoryItem item) {
         return InventoryItemDto.builder()
                 .id(item.getId())

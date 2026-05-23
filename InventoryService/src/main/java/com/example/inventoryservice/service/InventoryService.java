@@ -30,7 +30,9 @@ public interface InventoryService {
     InventoryItemDto reduceStock(String id, StockUpdateRequest request);
     
     boolean checkAvailability(String id, int quantity);
-    
+
     long getTotalItemCount();
+
+    List<InventoryItemDto> searchItems(String keyword);
 }
 

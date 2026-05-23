@@ -14,8 +14,11 @@ public interface JpaInventoryRepository extends JpaRepository<InventoryItem, Str
     
     @Query("SELECT i FROM InventoryItem i WHERE i.quantity <= i.minimumStockLevel")
     List<InventoryItem> findLowStockItems();
-    
+
     @Query("SELECT i FROM InventoryItem i WHERE i.quantity <= 0")
     List<InventoryItem> findOutOfStockItems();
+
+    @Query("SELECT i FROM InventoryItem i WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(i.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<InventoryItem> searchByNameOrDescription(String keyword);
 }
 
