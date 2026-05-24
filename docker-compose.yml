@@ -43,6 +43,22 @@ services:
       timeout: 5s
       retries: 5
 
+  # Zipkin - Distributed Tracing
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: ecommerce-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - ecommerce-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
   # UserService
   user-service:
     build:
@@ -55,10 +71,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user_db
       SPRING_DATASOURCE_USERNAME: userDbUser
       SPRING_DATASOURCE_PASSWORD: password
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
       JAVA_OPTS: "-Xmx512m -Xms256m"
     depends_on:
       mysql:
         condition: service_healthy
+      zipkin:
+        condition: service_started
     networks:
       - ecommerce-network
     deploy:
@@ -82,11 +101,14 @@ services:
        SPRING_DATASOURCE_USERNAME: product_user
        SPRING_DATASOURCE_PASSWORD: password
        SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://user-service:8071
+       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
        JAVA_OPTS: "-Xmx512m -Xms256m"
      depends_on:
        mysql:
          condition: service_healthy
        user-service:
+         condition: service_started
+       zipkin:
          condition: service_started
      networks:
        - ecommerce-network
@@ -110,10 +132,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/inventoryService
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
       JAVA_OPTS: "-Xmx512m -Xms256m"
     depends_on:
       mysql:
         condition: service_healthy
+      zipkin:
+        condition: service_started
     networks:
       - ecommerce-network
     deploy:
