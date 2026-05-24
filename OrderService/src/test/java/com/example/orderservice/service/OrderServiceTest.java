@@ -1,6 +1,7 @@
 package com.example.orderservice.service;
 
 import com.example.orderservice.client.InventoryServiceClient;
+import com.example.orderservice.event.OrderEventPublisher;
 import com.example.orderservice.dto.CreateOrderRequest;
 import com.example.orderservice.dto.OrderItemRequest;
 import com.example.orderservice.dto.OrderResponse;
@@ -38,6 +39,9 @@ class OrderServiceTest {
 
     @Mock
     private InventoryServiceClient inventoryServiceClient;
+
+	    @Mock
+	    private OrderEventPublisher orderEventPublisher;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -82,14 +86,15 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(testOrder);
 
         // Act
-        OrderResponse result = orderService.createOrder(createOrderRequest);
-
+	        OrderResponse result = orderService.createOrder(createOrderRequest);
+	        
         // Assert
         assertNotNull(result);
         assertEquals(testOrder.getUserId(), result.getUserId());
         verify(inventoryServiceClient, times(1)).checkAvailability(anyString(), anyInt());
         verify(inventoryServiceClient, times(1)).reduceStock(anyString(), anyInt());
         verify(orderRepository, times(1)).save(any(Order.class));
+	        verify(orderEventPublisher, times(1)).publishOrderCreated(any(Order.class));
     }
 
     @Test

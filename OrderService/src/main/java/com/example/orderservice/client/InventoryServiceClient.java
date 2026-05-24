@@ -1,5 +1,7 @@
 package com.example.orderservice.client;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ public class InventoryServiceClient {
         this.inventoryServiceUrl = inventoryServiceUrl;
     }
     
+    @CircuitBreaker(name = "inventoryService", fallbackMethod = "checkAvailabilityFallback")
+    @Retry(name = "inventoryService")
     public boolean checkAvailability(String productId, int quantity) {
         try {
             String url = String.format("%s/api/v1/inventory/%s/availability?quantity=%d", 
@@ -45,6 +49,8 @@ public class InventoryServiceClient {
         }
     }
     
+    @CircuitBreaker(name = "inventoryService", fallbackMethod = "reduceStockFallback")
+    @Retry(name = "inventoryService")
     public boolean reduceStock(String productId, int quantity) {
         try {
             String url = String.format("%s/api/v1/inventory/%s/stock/reduce", 
@@ -64,6 +70,8 @@ public class InventoryServiceClient {
         }
     }
     
+    @CircuitBreaker(name = "inventoryService", fallbackMethod = "restoreStockFallback")
+    @Retry(name = "inventoryService")
     public boolean restoreStock(String productId, int quantity) {
         try {
             String url = String.format("%s/api/v1/inventory/%s/stock/add", 
@@ -81,6 +89,24 @@ public class InventoryServiceClient {
             log.error("Error restoring stock: ", e);
             return false;
         }
+    }
+
+    private boolean checkAvailabilityFallback(String productId, int quantity, Throwable throwable) {
+        log.warn("Fallback: unable to check inventory availability for product: {}, quantity: {}",
+                productId, quantity, throwable);
+        return false;
+    }
+
+    private boolean reduceStockFallback(String productId, int quantity, Throwable throwable) {
+        log.warn("Fallback: unable to reduce stock for product: {}, quantity: {}",
+                productId, quantity, throwable);
+        return false;
+    }
+
+    private boolean restoreStockFallback(String productId, int quantity, Throwable throwable) {
+        log.warn("Fallback: unable to restore stock for product: {}, quantity: {}",
+                productId, quantity, throwable);
+        return false;
     }
 }
 

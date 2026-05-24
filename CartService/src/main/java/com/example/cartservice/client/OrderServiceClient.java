@@ -1,7 +1,7 @@
 package com.example.cartservice.client;
 
 import com.example.cartservice.model.Cart;
-import com.example.cartservice.model.CartItem;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,6 +27,7 @@ public class OrderServiceClient {
         this.orderServiceUrl = orderServiceUrl;
     }
     
+    @CircuitBreaker(name = "orderService", fallbackMethod = "createOrderFromCartFallback")
     public String createOrderFromCart(Cart cart) {
         try {
             String url = String.format("%s/api/v1/orders", orderServiceUrl);
@@ -62,6 +63,12 @@ public class OrderServiceClient {
             log.error("Error creating order from cart: ", e);
             throw new RuntimeException("Failed to create order: " + e.getMessage());
         }
+    }
+
+    private String createOrderFromCartFallback(Cart cart, Throwable throwable) {
+        log.error("Circuit breaker fallback: error creating order from cart for user: {}",
+                cart != null ? cart.getUserId() : "unknown", throwable);
+        throw new RuntimeException("Failed to create order: " + throwable.getMessage(), throwable);
     }
 }
 

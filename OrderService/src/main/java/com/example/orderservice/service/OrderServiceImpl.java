@@ -2,6 +2,7 @@ package com.example.orderservice.service;
 
 import com.example.orderservice.client.InventoryServiceClient;
 import com.example.orderservice.dto.*;
+import com.example.orderservice.event.OrderEventPublisher;
 import com.example.orderservice.exception.InsufficientStockException;
 import com.example.orderservice.exception.InvalidOrderException;
 import com.example.orderservice.exception.OrderNotFoundException;
@@ -27,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     
     private final OrderRepository orderRepository;
     private final InventoryServiceClient inventoryServiceClient;
+	    private final OrderEventPublisher orderEventPublisher;
     
     @Override
     @Transactional
@@ -81,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
             order.addOrderItem(item);
         }
         
-        Order savedOrder = orderRepository.save(order);
-        
+	        Order savedOrder = orderRepository.save(order);
+	        
         for (OrderItemRequest item : request.getItems()) {
             boolean reduced = inventoryServiceClient.reduceStock(
                     item.getProductId(), item.getQuantity());
@@ -90,9 +92,11 @@ public class OrderServiceImpl implements OrderService {
             if (!reduced) {
                 log.warn("Failed to reduce stock for product: {}", item.getProductId());
             }
-        }
-        
-        log.info("Order created successfully with ID: {}", savedOrder.getId());
+	        }
+
+	        orderEventPublisher.publishOrderCreated(savedOrder);
+	        
+	        log.info("Order created successfully with ID: {}", savedOrder.getId());
         
         return mapToOrderResponse(savedOrder);
     }

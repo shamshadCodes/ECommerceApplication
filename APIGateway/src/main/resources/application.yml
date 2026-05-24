@@ -79,4 +79,5 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     reactor.netty.http.client: DEBUG
-
+  pattern:
+    level: "%5p [traceId=%X{traceId:-}] [spanId=%X{spanId:-}] %m%n"
